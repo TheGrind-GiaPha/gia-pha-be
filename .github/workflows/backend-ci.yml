@@ -1,0 +1,29 @@
+name: backend-ci
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore GiaPha.sln
+
+      - name: Build
+        run: dotnet build GiaPha.sln --no-restore -c Release
+
+      - name: Test
+        run: dotnet test GiaPha.sln --no-build -c Release

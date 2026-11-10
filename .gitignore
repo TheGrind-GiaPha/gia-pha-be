@@ -1,0 +1,45 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.DotSettings.user
+
+# Rider
+.idea/
+*.sln.iml
+
+# Test
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+
+# Local config / secrets
+appsettings.*.local.json
+.env
+.env.*
+!.env.example
+
+# Local database files
+*.db
+*.db-shm
+*.db-wal
+*.mdf
+*.ldf
+
+# OS
+.DS_Store
+Thumbs.db
+
+# NuGet
+*.nupkg
+*.snupkg
