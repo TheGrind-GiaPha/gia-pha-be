@@ -197,7 +197,7 @@ Nếu chưa có LocalDB, cài SQL Server Express LocalDB hoặc đổi `DefaultC
 ### 5.1. Restore tool + package
 
 ```powershell
-cd C:\Users\ThienNLH3\Desktop\gia-pha-be
+cd C:\Users\ThienNLH3\Desktop\TheGrind-GiaPha\gia-pha-be
 dotnet tool restore
 dotnet restore GiaPha.sln
 ```
