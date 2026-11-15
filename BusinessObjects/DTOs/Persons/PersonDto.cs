@@ -12,4 +12,5 @@ public sealed record PersonDto(
     FlexibleDateDto? DeathDate,
     int Generation,
     string Path,
-    string? PortraitUrl);
+    string? PortraitUrl,
+    bool HasHiddenChildren);

@@ -177,6 +177,9 @@ namespace GiaPha.DataAccessObjects.Migrations
                     b.Property<int>("Generation")
                         .HasColumnType("int");
 
+                    b.Property<bool>("HasHiddenChildren")
+                        .HasColumnType("bit");
+
                     b.Property<string>("HuyName")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
