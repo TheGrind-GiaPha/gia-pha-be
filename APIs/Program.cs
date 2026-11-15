@@ -6,6 +6,7 @@ using GiaPha.DataAccessObjects.Seed;
 using GiaPha.Repositories.Extensions;
 using GiaPha.Services.Extensions;
 using GiaPha.Services.Options;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -116,6 +117,19 @@ builder.Services.AddDataAccess(builder.Configuration);
 builder.Services.AddRepositories();
 builder.Services.AddBusinessServices();
 
+// Hangfire Background Job Processing
+var defaultConn = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Thiếu chuỗi kết nối 'DefaultConnection'.");
+builder.Services.AddHangfire(config => config
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UseSqlServerStorage(defaultConn));
+builder.Services.AddHangfireServer(options =>
+{
+    options.WorkerCount = Math.Max(2, Environment.ProcessorCount / 2);
+});
+
 builder.Services
     .AddHealthChecks()
     .AddDbContextCheck<GiaPhaDbContext>("database");
@@ -133,6 +147,11 @@ app.UseStaticFiles();
 app.UseCors("Frontend");
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseHangfireDashboard("/hangfire", new DashboardOptions
+{
+    // Cho phép truy cập trong môi trường phát triển
+    Authorization = []
+});
 
 app.MapControllers();
 app.MapHealthChecks("/health");

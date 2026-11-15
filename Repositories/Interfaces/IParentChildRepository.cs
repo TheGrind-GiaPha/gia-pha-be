@@ -25,4 +25,9 @@ public interface IParentChildRepository : IRepositoryBase<ParentChild>
     Task<IReadOnlyList<ParentChild>> GetAllByChildIdAsync(
         Guid childId,
         CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<ParentChild>> GetByChildIdsAsync(
+        IReadOnlyCollection<Guid> childIds,
+        bool trackChanges,
+        CancellationToken cancellationToken = default);
 }

@@ -17,7 +17,10 @@ public sealed class RepositoryManager : IRepositoryManager
         IUnionRepository unionRepository,
         IMagicLinkTokenRepository magicLinkTokenRepository,
         IChangeRequestRepository changeRequestRepository,
-        IAuditLogRepository auditLogRepository)
+        IAuditLogRepository auditLogRepository,
+        IImportBatchRepository importBatchRepository,
+        IImportRowRepository importRowRepository,
+        IExportJobRepository exportJobRepository)
     {
         _context = context;
         Clan = clanRepository;
@@ -29,6 +32,9 @@ public sealed class RepositoryManager : IRepositoryManager
         MagicLinkToken = magicLinkTokenRepository;
         ChangeRequest = changeRequestRepository;
         AuditLog = auditLogRepository;
+        ImportBatch = importBatchRepository;
+        ImportRow = importRowRepository;
+        ExportJob = exportJobRepository;
     }
 
     public IClanRepository Clan { get; }
@@ -49,6 +55,11 @@ public sealed class RepositoryManager : IRepositoryManager
 
     public IAuditLogRepository AuditLog { get; }
 
+    public IImportBatchRepository ImportBatch { get; }
+
+    public IImportRowRepository ImportRow { get; }
+
+    public IExportJobRepository ExportJob { get; }
     public Task<int> SaveAsync(CancellationToken cancellationToken = default)
         => _context.SaveChangesAsync(cancellationToken);
 }

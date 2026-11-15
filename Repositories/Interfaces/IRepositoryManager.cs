@@ -24,5 +24,10 @@ public interface IRepositoryManager
 
     IAuditLogRepository AuditLog { get; }
 
+    IImportBatchRepository ImportBatch { get; }
+
+    IImportRowRepository ImportRow { get; }
+
+    IExportJobRepository ExportJob { get; }
     Task<int> SaveAsync(CancellationToken cancellationToken = default);
 }

@@ -30,6 +30,12 @@ public sealed class GiaPhaDbContext : DbContext
 
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 
+    public DbSet<ImportBatch> ImportBatches => Set<ImportBatch>();
+
+    public DbSet<ImportRow> ImportRows => Set<ImportRow>();
+
+    public DbSet<ExportJob> ExportJobs => Set<ExportJob>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Mọi configuration nằm trong DataAccessObjects/Configurations.

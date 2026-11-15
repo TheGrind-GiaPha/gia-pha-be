@@ -12,4 +12,9 @@ public interface IUnionRepository : IRepositoryBase<Union>
     Task<IReadOnlyList<Union>> GetByPersonIdAsync(
         Guid personId,
         CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<Union>> GetByHusbandAsync(
+        Guid husbandId,
+        bool trackChanges,
+        CancellationToken cancellationToken = default);
 }

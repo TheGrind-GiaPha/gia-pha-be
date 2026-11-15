@@ -268,6 +268,154 @@ namespace GiaPha.DataAccessObjects.Migrations
                     b.ToTable("MagicLinkTokens", (string)null);
                 });
 
+            modelBuilder.Entity("GiaPha.BusinessObjects.Entities.ExportJob", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("BranchId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ClanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<string>("FileName")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("FilePath")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<long?>("FileSizeBytes")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("FinishedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProgressPercentage")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("ClanId");
+
+                    b.HasIndex("Status");
+
+                    b.ToTable("ExportJobs", (string)null);
+                });
+
+            modelBuilder.Entity("GiaPha.BusinessObjects.Entities.ImportBatch", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("AcceptedRowsCount")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("ClanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("ConsentGiven")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("Source")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalRows")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClanId");
+
+                    b.HasIndex("Status");
+
+                    b.ToTable("ImportBatches", (string)null);
+                });
+
+            modelBuilder.Entity("GiaPha.BusinessObjects.Entities.ImportRow", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BatchId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ExtractedJson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("MatchedPersonId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("RowIndex")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Warnings")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BatchId");
+
+                    b.HasIndex("MatchedPersonId");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("BatchId", "RowIndex");
+
+                    b.ToTable("ImportRows", (string)null);
+                });
+
             modelBuilder.Entity("GiaPha.BusinessObjects.Entities.ParentChild", b =>
                 {
                     b.Property<Guid>("Id")
@@ -516,6 +664,65 @@ namespace GiaPha.DataAccessObjects.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+            modelBuilder.Entity("GiaPha.BusinessObjects.Entities.ChangeRequest", b =>
+                {
+                    b.HasOne("GiaPha.BusinessObjects.Entities.Clan", null)
+                        .WithMany()
+                        .HasForeignKey("ClanId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("GiaPha.BusinessObjects.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("GiaPha.BusinessObjects.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("ReviewedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("GiaPha.BusinessObjects.Entities.ExportJob", b =>
+                {
+                    b.HasOne("GiaPha.BusinessObjects.Entities.Branch", null)
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("GiaPha.BusinessObjects.Entities.Clan", null)
+                        .WithMany()
+                        .HasForeignKey("ClanId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GiaPha.BusinessObjects.Entities.ImportBatch", b =>
+                {
+                    b.HasOne("GiaPha.BusinessObjects.Entities.Clan", null)
+                        .WithMany()
+                        .HasForeignKey("ClanId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GiaPha.BusinessObjects.Entities.ImportRow", b =>
+                {
+                    b.HasOne("GiaPha.BusinessObjects.Entities.ImportBatch", "Batch")
+                        .WithMany("Rows")
+                        .HasForeignKey("BatchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GiaPha.BusinessObjects.Entities.Person", null)
+                        .WithMany()
+                        .HasForeignKey("MatchedPersonId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Batch");
+                });
+
             modelBuilder.Entity("GiaPha.BusinessObjects.Entities.ParentChild", b =>
                 {
                     b.HasOne("GiaPha.BusinessObjects.Entities.Person", null)
@@ -638,6 +845,11 @@ namespace GiaPha.DataAccessObjects.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("GiaPha.BusinessObjects.Entities.ImportBatch", b =>
+                {
+                    b.Navigation("Rows");
                 });
 #pragma warning restore 612, 618
         }

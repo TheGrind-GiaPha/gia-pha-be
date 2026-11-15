@@ -46,4 +46,11 @@ public sealed class ParentChildRepository : RepositoryBase<ParentChild>, IParent
         CancellationToken cancellationToken = default)
         => await FindByCondition(x => x.ChildId == childId, trackChanges: true)
             .ToListAsync(cancellationToken);
+
+    public async Task<IReadOnlyList<ParentChild>> GetByChildIdsAsync(
+        IReadOnlyCollection<Guid> childIds,
+        bool trackChanges,
+        CancellationToken cancellationToken = default)
+        => await FindByCondition(x => childIds.Contains(x.ChildId), trackChanges)
+            .ToListAsync(cancellationToken);
 }
