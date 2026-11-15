@@ -39,5 +39,8 @@ public sealed class Person : BaseEntity, IClanScopedEntity
     /// <summary>Id của người mà bản ghi này đã bị gộp vào (khi Status = Deleted do merge).</summary>
     public Guid? MergedIntoId { get; set; }
 
+    /// <summary>Người này còn con cháu lịch sử chưa đưa vào dữ liệu (UI hiện "…").</summary>
+    public bool HasHiddenChildren { get; set; }
+
     public int Version { get; set; } = 1;
 }

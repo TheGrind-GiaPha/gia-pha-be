@@ -42,6 +42,8 @@ public static class AuditDiffFormatter
         ["portraitUrl"] = "Ảnh chân dung",
         ["mergedIntoId"] = "Gộp vào",
         ["branchId"] = "Chi",
+        ["visibility"] = "Chế độ hiển thị",
+        ["hasHiddenChildren"] = "Còn con chưa hiển thị",
         ["founderPersonId"] = "Người sáng lập chi",
         ["siblingOrder"] = "Thứ tự anh em",
         ["relationType"] = "Loại quan hệ",
@@ -72,7 +74,9 @@ public static class AuditDiffFormatter
         ["privacyLevel"] = 14,
         ["portraitUrl"] = 15,
         ["mergedIntoId"] = 16,
-        ["branchId"] = 17
+        ["branchId"] = 17,
+        ["visibility"] = 18,
+        ["hasHiddenChildren"] = 19
     };
 
     public static AuditLogDto ToDto(AuditLog log)
@@ -217,6 +221,11 @@ public static class AuditDiffFormatter
         if (key.Equals("relationType", StringComparison.OrdinalIgnoreCase))
         {
             return FormatRelation(value);
+        }
+
+        if (key.Equals("visibility", StringComparison.OrdinalIgnoreCase))
+        {
+            return FormatVisibility(value);
         }
 
         if (key.Equals("isLiving", StringComparison.OrdinalIgnoreCase))
@@ -388,6 +397,23 @@ public static class AuditDiffFormatter
             0 => "Công khai",
             1 => "Trong họ",
             2 => "Riêng tư",
+            _ => value.GetRawText()
+        },
+        _ => value.GetRawText()
+    };
+
+    private static string FormatVisibility(JsonElement value) => value.ValueKind switch
+    {
+        JsonValueKind.String => value.GetString() switch
+        {
+            "Private" => "Riêng tư",
+            "Public" => "Công khai",
+            _ => value.GetString() ?? "(trống)"
+        },
+        JsonValueKind.Number when value.TryGetInt32(out var number) => number switch
+        {
+            0 => "Riêng tư",
+            1 => "Công khai",
             _ => value.GetRawText()
         },
         _ => value.GetRawText()

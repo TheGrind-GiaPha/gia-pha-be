@@ -542,7 +542,8 @@ public sealed class PersonService : IPersonService
             Map(person.DeathDate),
             person.Generation,
             person.Path,
-            person.PortraitUrl);
+            person.PortraitUrl,
+            person.HasHiddenChildren);
 
     private static UnionDto Map(Union union)
         => new(union.Id, union.HusbandId, union.WifeId, union.Rank);

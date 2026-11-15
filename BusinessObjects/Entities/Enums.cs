@@ -45,10 +45,27 @@ public enum ClanStatus
     Published = 1
 }
 
+/// <summary>Hành động được ghi trong AuditLog.</summary>
 public enum AuditAction
 {
     Create = 0,
     Update = 1,
     Delete = 2,
     Restore = 3
+}
+
+/// <summary>Chế độ hiển thị của dòng họ: riêng tư hoặc công khai cho khách xem.</summary>
+public enum ClanVisibility
+{
+    Private = 0,
+    Public = 1
+}
+
+/// <summary>Vai trò của một người dùng trong một dòng họ.</summary>
+public enum ClanRole
+{
+    ClanAdmin = 0,
+    BranchEditor = 1,
+    Approver = 2,
+    Member = 3
 }

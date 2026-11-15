@@ -4,6 +4,7 @@ namespace GiaPha.BusinessObjects.Exceptions;
 public static class ApiErrorCodes
 {
     public const string Conflict = "CONFLICT";
+    public const string Unauthorized = "UNAUTHORIZED";
     public const string NotFound = "NOT_FOUND";
     public const string Validation = "VALIDATION_ERROR";
     public const string RequiresChangeRequest = "REQUIRES_CHANGE_REQUEST";

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace GiaPha.APIs.Middleware;
 
 /// <summary>
-/// Gom lỗi nghiệp vụ về ProblemDetails thống nhất.
+/// Gom lỗi nghiệp vụ về cùng một dạng { code, message }.
 /// Controller không cần try/catch lặp lại.
 /// </summary>
 public sealed class GlobalExceptionHandler : IExceptionHandler
@@ -27,6 +27,10 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
             RequiresChangeRequestException ex => (
                 StatusCodes.Status409Conflict,
                 ex.Code,
+                ex.Message),
+            UnauthorizedException ex => (
+                StatusCodes.Status401Unauthorized,
+                ApiErrorCodes.Unauthorized,
                 ex.Message),
             ConflictException ex => (
                 StatusCodes.Status409Conflict,

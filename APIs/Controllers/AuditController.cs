@@ -1,11 +1,13 @@
 using GiaPha.BusinessObjects.DTOs.Audits;
 using GiaPha.BusinessObjects.DTOs.Common;
 using GiaPha.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GiaPha.APIs.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/clans/{clanId:guid}")]
 [Produces("application/json")]
 public sealed class AuditController : ControllerBase

@@ -10,6 +10,8 @@ public sealed class RepositoryManager : IRepositoryManager
     public RepositoryManager(
         GiaPhaDbContext context,
         IClanRepository clanRepository,
+        IUserRepository userRepository,
+        IUserClanRoleRepository userClanRoleRepository,
         IPersonRepository personRepository,
         IParentChildRepository parentChildRepository,
         IUnionRepository unionRepository,
@@ -17,6 +19,8 @@ public sealed class RepositoryManager : IRepositoryManager
     {
         _context = context;
         Clan = clanRepository;
+        User = userRepository;
+        UserClanRole = userClanRoleRepository;
         Person = personRepository;
         ParentChild = parentChildRepository;
         Union = unionRepository;
@@ -24,6 +28,10 @@ public sealed class RepositoryManager : IRepositoryManager
     }
 
     public IClanRepository Clan { get; }
+
+    public IUserRepository User { get; }
+
+    public IUserClanRoleRepository UserClanRole { get; }
 
     public IPersonRepository Person { get; }
 

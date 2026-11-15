@@ -148,6 +148,11 @@ namespace GiaPha.DataAccessObjects.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Visibility")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
@@ -162,7 +167,8 @@ namespace GiaPha.DataAccessObjects.Migrations
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Dữ liệu mẫu phục vụ kiểm thử luồng API và giao diện.",
                             Name = "Gia phả họ Nguyễn Hữu",
-                            Status = 0
+                            Status = 0,
+                            Visibility = 0
                         },
                         new
                         {
@@ -170,7 +176,8 @@ namespace GiaPha.DataAccessObjects.Migrations
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Dữ liệu mẫu phục vụ kiểm thử luồng API và giao diện.",
                             Name = "Gia phả họ Trần",
-                            Status = 0
+                            Status = 0,
+                            Visibility = 0
                         });
                 });
 
@@ -233,6 +240,9 @@ namespace GiaPha.DataAccessObjects.Migrations
 
                     b.Property<int>("Generation")
                         .HasColumnType("int");
+
+                    b.Property<bool>("HasHiddenChildren")
+                        .HasColumnType("bit");
 
                     b.Property<string>("HuyName")
                         .HasMaxLength(200)
@@ -312,6 +322,77 @@ namespace GiaPha.DataAccessObjects.Migrations
                         .IsUnique();
 
                     b.ToTable("Unions", (string)null);
+                });
+
+            modelBuilder.Entity("GiaPha.BusinessObjects.Entities.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(320)
+                        .HasColumnType("nvarchar(320)");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("Users", (string)null);
+                });
+
+            modelBuilder.Entity("GiaPha.BusinessObjects.Entities.UserClanRole", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("BranchId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ClanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("ClanId");
+
+                    b.HasIndex("UserId", "ClanId", "Role")
+                        .IsUnique();
+
+                    b.ToTable("UserClanRoles", (string)null);
                 });
 
             modelBuilder.Entity("GiaPha.BusinessObjects.Entities.Branch", b =>
@@ -429,6 +510,26 @@ namespace GiaPha.DataAccessObjects.Migrations
                         .WithMany()
                         .HasForeignKey("WifeId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GiaPha.BusinessObjects.Entities.UserClanRole", b =>
+                {
+                    b.HasOne("GiaPha.BusinessObjects.Entities.Branch", null)
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("GiaPha.BusinessObjects.Entities.Clan", null)
+                        .WithMany()
+                        .HasForeignKey("ClanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GiaPha.BusinessObjects.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

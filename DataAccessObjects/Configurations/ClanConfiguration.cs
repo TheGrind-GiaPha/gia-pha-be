@@ -29,6 +29,10 @@ public sealed class ClanConfiguration : IEntityTypeConfiguration<Clan>
             .IsRequired()
             .HasDefaultValue(ClanStatus.Draft);
 
+        builder.Property(x => x.Visibility)
+            .IsRequired()
+            .HasDefaultValue(ClanVisibility.Private);
+
         builder.Property(x => x.PublishedAt);
 
         builder.Property(x => x.CreatedAt)
@@ -46,6 +50,7 @@ public sealed class ClanConfiguration : IEntityTypeConfiguration<Clan>
                 Name = "Gia phả họ Nguyễn Hữu",
                 Description = "Dữ liệu mẫu phục vụ kiểm thử luồng API và giao diện.",
                 Status = ClanStatus.Draft,
+                Visibility = ClanVisibility.Private,
                 CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc)
             },
             new Clan
@@ -54,6 +59,7 @@ public sealed class ClanConfiguration : IEntityTypeConfiguration<Clan>
                 Name = "Gia phả họ Trần",
                 Description = "Dữ liệu mẫu phục vụ kiểm thử luồng API và giao diện.",
                 Status = ClanStatus.Draft,
+                Visibility = ClanVisibility.Private,
                 CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc)
             });
     }

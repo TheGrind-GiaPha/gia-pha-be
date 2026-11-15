@@ -15,6 +15,8 @@ public sealed class Clan : BaseEntity, IClanScopedEntity
 
     public ClanStatus Status { get; set; } = ClanStatus.Draft;
 
+    public ClanVisibility Visibility { get; set; } = ClanVisibility.Private;
+
     public DateTime? PublishedAt { get; set; }
 
     Guid IClanScopedEntity.ClanId => Id;
