@@ -3,7 +3,7 @@ namespace GiaPha.BusinessObjects.Entities;
 /// <summary>
 /// Dòng họ: không gian làm việc riêng biệt của từng dòng họ.
 /// </summary>
-public sealed class Clan : BaseEntity
+public sealed class Clan : BaseEntity, IClanScopedEntity
 {
     public string Name { get; set; } = string.Empty;
 
@@ -16,4 +16,6 @@ public sealed class Clan : BaseEntity
     public ClanStatus Status { get; set; } = ClanStatus.Draft;
 
     public DateTime? PublishedAt { get; set; }
+
+    Guid IClanScopedEntity.ClanId => Id;
 }

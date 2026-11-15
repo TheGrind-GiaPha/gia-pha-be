@@ -1,7 +1,7 @@
 namespace GiaPha.BusinessObjects.Entities;
 
 /// <summary>Chi/nhánh của một dòng họ, bắt đầu từ người sáng lập chi.</summary>
-public sealed class Branch : BaseEntity
+public sealed class Branch : BaseEntity, IClanScopedEntity
 {
     public Guid ClanId { get; set; }
 

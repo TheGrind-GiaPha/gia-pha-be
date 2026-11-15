@@ -4,7 +4,7 @@ namespace GiaPha.BusinessObjects.Entities;
 /// Một người trong gia phả. Đời (Generation) và đường dẫn (Path) được
 /// tính tự động từ quan hệ cha - con (xem luồng 2 - logic của cây).
 /// </summary>
-public sealed class Person : BaseEntity
+public sealed class Person : BaseEntity, IClanScopedEntity
 {
     public Guid ClanId { get; set; }
 

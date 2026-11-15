@@ -20,6 +20,8 @@ public sealed class GiaPhaDbContext : DbContext
 
     public DbSet<Union> Unions => Set<Union>();
 
+    public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Mọi configuration nằm trong DataAccessObjects/Configurations.

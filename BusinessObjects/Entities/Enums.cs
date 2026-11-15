@@ -44,3 +44,11 @@ public enum ClanStatus
     Draft = 0,
     Published = 1
 }
+
+public enum AuditAction
+{
+    Create = 0,
+    Update = 1,
+    Delete = 2,
+    Restore = 3
+}
