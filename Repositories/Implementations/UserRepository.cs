@@ -29,4 +29,10 @@ public sealed class UserRepository : RepositoryBase<User>, IUserRepository
         CancellationToken cancellationToken = default)
         => FindByCondition(x => x.Email == email, trackChanges: false)
             .AnyAsync(cancellationToken);
+
+    public async Task<IReadOnlyList<User>> GetByIdsAsync(
+        IReadOnlyCollection<Guid> ids,
+        CancellationToken cancellationToken = default)
+        => await FindByCondition(x => ids.Contains(x.Id), trackChanges: false)
+            .ToListAsync(cancellationToken);
 }

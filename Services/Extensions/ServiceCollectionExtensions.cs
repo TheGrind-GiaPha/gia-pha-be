@@ -18,6 +18,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IPersonService, PersonService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IPublicClanService, PublicClanService>();
+        services.AddScoped<IClanRoleService, ClanRoleService>();
 
         // Handler thay đổi cho Luồng 1 (ChangeRequest.Apply).
         services.AddScoped<IChangeHandler, AddPersonHandler>();

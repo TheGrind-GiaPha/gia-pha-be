@@ -302,6 +302,42 @@ namespace GiaPha.DataAccessObjects.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
+            modelBuilder.Entity("GiaPha.BusinessObjects.Entities.UserClanRole", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("BranchId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ClanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("ClanId");
+
+                    b.HasIndex("UserId", "ClanId", "Role")
+                        .IsUnique();
+
+                    b.ToTable("UserClanRoles", (string)null);
+                });
+
             modelBuilder.Entity("GiaPha.BusinessObjects.Entities.Branch", b =>
                 {
                     b.HasOne("GiaPha.BusinessObjects.Entities.Clan", null)
@@ -417,6 +453,26 @@ namespace GiaPha.DataAccessObjects.Migrations
                         .WithMany()
                         .HasForeignKey("WifeId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GiaPha.BusinessObjects.Entities.UserClanRole", b =>
+                {
+                    b.HasOne("GiaPha.BusinessObjects.Entities.Branch", null)
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("GiaPha.BusinessObjects.Entities.Clan", null)
+                        .WithMany()
+                        .HasForeignKey("ClanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GiaPha.BusinessObjects.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

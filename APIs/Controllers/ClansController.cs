@@ -1,4 +1,7 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using GiaPha.BusinessObjects.DTOs.Clans;
+using GiaPha.BusinessObjects.Entities;
 using GiaPha.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +15,18 @@ namespace GiaPha.APIs.Controllers;
 public sealed class ClansController : ControllerBase
 {
     private readonly IClanService _clanService;
+    private readonly IClanRoleService _clanRoleService;
 
-    public ClansController(IClanService clanService)
+    public ClansController(IClanService clanService, IClanRoleService clanRoleService)
     {
         _clanService = clanService;
+        _clanRoleService = clanRoleService;
+    }
+
+    private Guid? GetUserId()
+    {
+        var sub = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+        return sub is not null && Guid.TryParse(sub, out var id) ? id : null;
     }
 
     /// <summary>Lấy danh sách dòng họ, có thể tìm theo tên.</summary>
@@ -48,6 +59,14 @@ public sealed class ClansController : ControllerBase
         CancellationToken cancellationToken)
     {
         var clan = await _clanService.CreateAsync(request, cancellationToken);
+
+        // Người tạo dòng họ trở thành ClanAdmin để có thể phân quyền tiếp.
+        var userId = GetUserId();
+        if (userId is not null)
+        {
+            await _clanRoleService.EnsureClanAdminAsync(clan.Id, userId.Value, cancellationToken);
+        }
+
         return CreatedAtAction(nameof(GetById), new { id = clan.Id }, clan);
     }
 

@@ -16,4 +16,8 @@ public interface IUserRepository : IRepositoryBase<User>
     Task<bool> ExistsByEmailAsync(
         string email,
         CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<User>> GetByIdsAsync(
+        IReadOnlyCollection<Guid> ids,
+        CancellationToken cancellationToken = default);
 }

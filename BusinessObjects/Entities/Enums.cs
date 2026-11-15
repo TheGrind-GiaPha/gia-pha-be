@@ -51,3 +51,12 @@ public enum ClanVisibility
     Private = 0,
     Public = 1
 }
+
+/// <summary>Vai trò của một người dùng trong một dòng họ.</summary>
+public enum ClanRole
+{
+    ClanAdmin = 0,
+    BranchEditor = 1,
+    Approver = 2,
+    Member = 3
+}

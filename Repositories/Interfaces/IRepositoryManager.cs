@@ -10,6 +10,8 @@ public interface IRepositoryManager
 
     IUserRepository User { get; }
 
+    IUserClanRoleRepository UserClanRole { get; }
+
     IPersonRepository Person { get; }
 
     IParentChildRepository ParentChild { get; }
