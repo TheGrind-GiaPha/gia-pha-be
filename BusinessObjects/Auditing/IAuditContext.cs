@@ -11,4 +11,5 @@ public interface IAuditContext
     Guid BatchId { get; }
     Guid? ActorId { get; set; }
     Guid? ChangeRequestId { get; set; }
+    bool IsRestore { get; set; }
 }

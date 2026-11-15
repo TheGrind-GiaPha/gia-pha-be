@@ -1,5 +1,4 @@
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using GiaPha.BusinessObjects.Auditing;
 using GiaPha.BusinessObjects.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -10,11 +9,6 @@ namespace GiaPha.DataAccessObjects.Auditing;
 
 public class AuditSaveChangesInterceptor : SaveChangesInterceptor
 {
-    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
-    {
-        Converters = { new JsonStringEnumConverter() }
-    };
-
     private static readonly HashSet<string> IgnoredProperties = new(StringComparer.Ordinal)
     {
         nameof(BaseEntity.Id),
@@ -62,7 +56,9 @@ public class AuditSaveChangesInterceptor : SaveChangesInterceptor
                 EntityId = entry.Property("Id").CurrentValue is Guid id ? id : Guid.Empty,
                 Action = entry.State == EntityState.Added
                     ? AuditAction.Create
-                    : AuditAction.Update,
+                    : _auditContext.IsRestore
+                        ? AuditAction.Restore
+                        : AuditAction.Update,
                 BatchId = _auditContext.BatchId,
                 Before = before,
                 After = after,
@@ -75,7 +71,7 @@ public class AuditSaveChangesInterceptor : SaveChangesInterceptor
     {
         if (entry.State == EntityState.Added)
         {
-            return (null, JsonSerializer.Serialize(entry.Entity, entry.Entity.GetType(), JsonOptions));
+            return (null, JsonSerializer.Serialize(entry.Entity, entry.Entity.GetType(), AuditJson.Options));
         }
 
         var before = new Dictionary<string, object?>();
@@ -88,6 +84,11 @@ public class AuditSaveChangesInterceptor : SaveChangesInterceptor
                 continue;
             }
 
+            if (Equals(property.OriginalValue, property.CurrentValue))
+            {
+                continue;
+            }
+
             var key = JsonNamingPolicy.CamelCase.ConvertName(property.Metadata.Name);
             before[key] = property.OriginalValue;
             after[key] = property.CurrentValue;
@@ -95,6 +96,6 @@ public class AuditSaveChangesInterceptor : SaveChangesInterceptor
 
         return before.Count == 0
             ? (null, null)
-            : (JsonSerializer.Serialize(before, JsonOptions), JsonSerializer.Serialize(after, JsonOptions));
+            : (JsonSerializer.Serialize(before, AuditJson.Options), JsonSerializer.Serialize(after, AuditJson.Options));
     }
 }

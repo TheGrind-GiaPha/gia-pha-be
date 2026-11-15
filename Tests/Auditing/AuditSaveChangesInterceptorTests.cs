@@ -86,4 +86,56 @@ public sealed class AuditSaveChangesInterceptorTests
         Assert.Equal("Gia phả họ Nguyễn Hữu", before.RootElement.GetProperty("name").GetString());
         Assert.Equal("Gia phả họ Nguyễn Hữu 1", after.RootElement.GetProperty("name").GetString());
     }
+
+    [Fact]
+    public async Task SavingClanMarkedModifiedByRepository_LogsOnlyActuallyChangedFields()
+    {
+        await using var db = CreateContext(out _);
+
+        var clan = new Clan { Name = "A", Description = "Mô tả" };
+        db.Clans.Add(clan);
+        await db.SaveChangesAsync();
+
+        db.ChangeTracker.Clear();
+
+        var tracked = await db.Clans.SingleAsync(x => x.Id == clan.Id);
+        tracked.Name = "B";
+        db.Clans.Update(tracked);
+        await db.SaveChangesAsync();
+
+        var log = db.AuditLogs.Single(x => x.Action == AuditAction.Update);
+
+        using var before = JsonDocument.Parse(log.Before!);
+        using var after = JsonDocument.Parse(log.After!);
+
+        Assert.Equal(
+            new[] { "name" },
+            before.RootElement.EnumerateObject().Select(x => x.Name));
+        Assert.Equal(
+            new[] { "name" },
+            after.RootElement.EnumerateObject().Select(x => x.Name));
+    }
+
+    [Fact]
+    public async Task SavingModifiedClan_WhenRestoreFlagSet_LogsRestoreAction()
+    {
+        await using var db = CreateContext(out var auditContext);
+
+        var clan = new Clan { Name = "A" };
+        db.Clans.Add(clan);
+        await db.SaveChangesAsync();
+
+        db.ChangeTracker.Clear();
+
+        var tracked = await db.Clans.SingleAsync(x => x.Id == clan.Id);
+        tracked.Name = "B";
+        auditContext.IsRestore = true;
+        await db.SaveChangesAsync();
+
+        var log = await db.AuditLogs.SingleAsync(x => x.Action == AuditAction.Restore);
+
+        Assert.Equal("Clan", log.EntityType);
+        using var before = JsonDocument.Parse(log.Before!);
+        Assert.Equal("A", before.RootElement.GetProperty("name").GetString());
+    }
 }

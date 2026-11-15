@@ -11,4 +11,5 @@ public sealed class AuditContext : IAuditContext
     public Guid BatchId { get; } = Guid.NewGuid();
     public Guid? ActorId { get; set; }
     public Guid? ChangeRequestId { get; set; }
+    public bool IsRestore { get; set; }
 }

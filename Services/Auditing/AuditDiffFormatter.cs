@@ -77,8 +77,8 @@ public static class AuditDiffFormatter
 
     public static AuditLogDto ToDto(AuditLog log)
     {
-        var before = Parse(log.Before);
-        var after = Parse(log.After);
+        var before = AuditSnapshot.Parse(log.Before);
+        var after = AuditSnapshot.Parse(log.After);
         var occurredAt = log.OccurredAt.Kind == DateTimeKind.Unspecified
             ? DateTime.SpecifyKind(log.OccurredAt, DateTimeKind.Utc)
             : log.OccurredAt.ToUniversalTime();
@@ -98,6 +98,8 @@ public static class AuditDiffFormatter
             BuildChanges(log.EntityType, before, after),
             occurredAt);
     }
+
+    public static string Label(string key) => FieldLabel(key);
 
     private static IReadOnlyList<AuditChangeDto> BuildChanges(
         string entityType,
@@ -135,35 +137,6 @@ public static class AuditDiffFormatter
         }
 
         return changes;
-    }
-
-    private static Dictionary<string, JsonElement> Parse(string? json)
-    {
-        if (string.IsNullOrWhiteSpace(json))
-        {
-            return new Dictionary<string, JsonElement>(StringComparer.OrdinalIgnoreCase);
-        }
-
-        try
-        {
-            using var document = JsonDocument.Parse(json);
-
-            if (document.RootElement.ValueKind != JsonValueKind.Object)
-            {
-                return new Dictionary<string, JsonElement>(StringComparer.OrdinalIgnoreCase);
-            }
-
-            return document.RootElement
-                .EnumerateObject()
-                .ToDictionary(
-                    property => property.Name,
-                    property => property.Value.Clone(),
-                    StringComparer.OrdinalIgnoreCase);
-        }
-        catch (JsonException)
-        {
-            return new Dictionary<string, JsonElement>(StringComparer.OrdinalIgnoreCase);
-        }
     }
 
     private static string BuildSummary(
