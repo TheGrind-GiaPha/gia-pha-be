@@ -26,6 +26,7 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
         {
             ConflictException => (StatusCodes.Status409Conflict, "Xung đột dữ liệu"),
             UnauthorizedException => (StatusCodes.Status401Unauthorized, "Không được phép"),
+            ForbiddenException => (StatusCodes.Status403Forbidden, "Không đủ quyền"),
             NotFoundException => (StatusCodes.Status404NotFound, "Không tìm thấy"),
             ArgumentException => (StatusCodes.Status400BadRequest, "Dữ liệu không hợp lệ"),
             DbUpdateException => (StatusCodes.Status409Conflict, "Không thể lưu dữ liệu"),

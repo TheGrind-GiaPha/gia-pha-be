@@ -45,6 +45,31 @@ public sealed class AuthController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>Gửi liên kết đăng nhập (magic link) tới email — dành cho người duyệt lớn tuổi.</summary>
+    [HttpPost("magic-link")]
+    [ProducesResponseType(typeof(MagicLinkResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<MagicLinkResponse>> RequestMagicLink(
+        [FromBody] MagicLinkRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await _authService.RequestMagicLinkAsync(request, cancellationToken);
+        return Ok(result);
+    }
+
+    /// <summary>Xác nhận magic link, trả JWT để người duyệt vào thẳng trang duyệt.</summary>
+    [HttpPost("magic-link/verify")]
+    [ProducesResponseType(typeof(AuthResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<AuthResponse>> VerifyMagicLink(
+        [FromBody] MagicLinkVerifyRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await _authService.VerifyMagicLinkAsync(request, cancellationToken);
+        return result is null ? Unauthorized("Liên kết không hợp lệ hoặc đã hết hạn.") : Ok(result);
+    }
+
     /// <summary>Lấy thông tin tài khoản đang đăng nhập.</summary>
     [Authorize]
     [HttpGet("me")]

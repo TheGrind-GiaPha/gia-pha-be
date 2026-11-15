@@ -84,6 +84,34 @@ public sealed class ClansController : ControllerBase
         return clan is null ? NotFound() : Ok(clan);
     }
 
+    /// <summary>Công bố dòng họ. Chỉ Người duyệt (các cụ bô lão) hoặc Quản trị họ.</summary>
+    [HttpPost("{id:guid}/publish")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Publish(
+        Guid id,
+        CancellationToken cancellationToken)
+    {
+        var userId = GetUserId();
+        if (userId is null)
+        {
+            return Unauthorized();
+        }
+
+        var isApprover = await _clanRoleService.HasRoleAsync(userId.Value, id, ClanRole.Approver, cancellationToken);
+        var isAdmin = await _clanRoleService.HasRoleAsync(userId.Value, id, ClanRole.ClanAdmin, cancellationToken);
+        if (!isApprover && !isAdmin)
+        {
+            return Forbid();
+        }
+
+        return await _clanService.PublishAsync(id, cancellationToken)
+            ? NoContent()
+            : NotFound();
+    }
+
     /// <summary>Xóa dòng họ.</summary>
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

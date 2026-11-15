@@ -91,19 +91,23 @@ public sealed class ClanRoleService : IClanRoleService
         _logger.LogInfo($"Đã thu hồi role {role} của user {userId} trong clan {clanId}.");
     }
 
-    public Task<bool> HasRoleAsync(
+    public async Task<bool> HasRoleAsync(
         Guid userId,
         Guid clanId,
         ClanRole role,
         CancellationToken cancellationToken = default)
-        => _repository.UserClanRole.HasRoleAsync(userId, clanId, role, cancellationToken);
+    {
+        // Kế thừa vai trò theo use case: xem ClanRoleHierarchy.
+        var roles = await _repository.UserClanRole.GetRolesAsync(userId, clanId, cancellationToken);
+        return roles.Any(r => ClanRoleHierarchy.Implies(r, role));
+    }
 
     public async Task EnsureClanAdminAsync(
         Guid clanId,
         Guid userId,
         CancellationToken cancellationToken = default)
     {
-        if (await _repository.UserClanRole.HasRoleAsync(userId, clanId, ClanRole.ClanAdmin, cancellationToken))
+        if (await HasRoleAsync(userId, clanId, ClanRole.ClanAdmin, cancellationToken))
         {
             return;
         }

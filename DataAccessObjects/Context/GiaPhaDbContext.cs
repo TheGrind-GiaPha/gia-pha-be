@@ -24,6 +24,12 @@ public sealed class GiaPhaDbContext : DbContext
 
     public DbSet<Union> Unions => Set<Union>();
 
+    public DbSet<MagicLinkToken> MagicLinkTokens => Set<MagicLinkToken>();
+
+    public DbSet<ChangeRequest> ChangeRequests => Set<ChangeRequest>();
+
+    public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Mọi configuration nằm trong DataAccessObjects/Configurations.

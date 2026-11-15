@@ -60,3 +60,22 @@ public enum ClanRole
     Approver = 2,
     Member = 3
 }
+
+/// <summary>Trạng thái của một đề xuất thay đổi (ChangeRequest).</summary>
+public enum ChangeRequestStatus
+{
+    Pending = 0,
+    Approved = 1,
+    Rejected = 2,
+    Escalated = 3,
+    Cancelled = 4
+}
+
+/// <summary>Hành động ghi vào lịch sử (AuditLog).</summary>
+public enum AuditAction
+{
+    Create = 0,
+    Update = 1,
+    Delete = 2,
+    Restore = 3
+}

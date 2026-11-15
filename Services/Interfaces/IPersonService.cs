@@ -4,6 +4,11 @@ namespace GiaPha.Services.Interfaces;
 
 public interface IPersonService
 {
+    Task<PersonDto?> GetByIdAsync(
+        Guid clanId,
+        Guid personId,
+        CancellationToken cancellationToken = default);
+
     Task<IReadOnlyList<PersonDto>> AddChildrenAsync(
         Guid clanId,
         Guid fatherId,

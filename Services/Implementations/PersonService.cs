@@ -20,6 +20,15 @@ public sealed class PersonService : IPersonService
         _logger = logger;
     }
 
+    public async Task<PersonDto?> GetByIdAsync(
+        Guid clanId,
+        Guid personId,
+        CancellationToken cancellationToken = default)
+    {
+        var person = await _repository.Person.GetByIdAsync(personId, trackChanges: false, cancellationToken);
+        return person is null || person.ClanId != clanId ? null : Map(person);
+    }
+
     public async Task<IReadOnlyList<PersonDto>> AddChildrenAsync(
         Guid clanId,
         Guid fatherId,

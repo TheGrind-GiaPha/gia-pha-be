@@ -13,11 +13,16 @@ public sealed class PersonsController : ControllerBase
 {
     private readonly IPersonService _personService;
     private readonly IWebHostEnvironment _environment;
+    private readonly IClanService _clanService;
 
-    public PersonsController(IPersonService personService, IWebHostEnvironment environment)
+    public PersonsController(
+        IPersonService personService,
+        IWebHostEnvironment environment,
+        IClanService clanService)
     {
         _personService = personService;
         _environment = environment;
+        _clanService = clanService;
     }
 
     /// <summary>Thêm một hoặc nhiều người con cho một người cha.</summary>
@@ -25,12 +30,18 @@ public sealed class PersonsController : ControllerBase
     [ProducesResponseType(typeof(IReadOnlyList<PersonDto>), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<ActionResult<IReadOnlyList<PersonDto>>> AddChildren(
         Guid clanId,
         Guid fatherId,
         [FromBody] AddChildrenRequest request,
         CancellationToken cancellationToken)
     {
+        if (await _clanService.IsPublishedAsync(clanId, cancellationToken))
+        {
+            return Conflict(PublishedError());
+        }
+
         var children = await _personService.AddChildrenAsync(clanId, fatherId, request, cancellationToken);
         return StatusCode(StatusCodes.Status201Created, children);
     }
@@ -47,6 +58,11 @@ public sealed class PersonsController : ControllerBase
         [FromBody] AddUnionRequest request,
         CancellationToken cancellationToken)
     {
+        if (await _clanService.IsPublishedAsync(clanId, cancellationToken))
+        {
+            return Conflict(PublishedError());
+        }
+
         var union = await _personService.AddUnionAsync(clanId, husbandId, request, cancellationToken);
         return StatusCode(StatusCodes.Status201Created, union);
     }
@@ -63,6 +79,11 @@ public sealed class PersonsController : ControllerBase
         [FromBody] MoveSubtreeRequest request,
         CancellationToken cancellationToken)
     {
+        if (await _clanService.IsPublishedAsync(clanId, cancellationToken))
+        {
+            return Conflict(PublishedError());
+        }
+
         await _personService.MoveSubtreeAsync(clanId, personId, request.NewFatherId, cancellationToken);
         return NoContent();
     }
@@ -78,6 +99,11 @@ public sealed class PersonsController : ControllerBase
         Guid removeId,
         CancellationToken cancellationToken)
     {
+        if (await _clanService.IsPublishedAsync(clanId, cancellationToken))
+        {
+            return Conflict(PublishedError());
+        }
+
         var merged = await _personService.MergePersonsAsync(clanId, keepId, removeId, cancellationToken);
         return Ok(merged);
     }
@@ -94,6 +120,11 @@ public sealed class PersonsController : ControllerBase
         [FromBody] MoveSubtreeRequest request,
         CancellationToken cancellationToken)
     {
+        if (await _clanService.IsPublishedAsync(clanId, cancellationToken))
+        {
+            return Conflict(PublishedError());
+        }
+
         var result = await _personService.GraftAsync(clanId, rootId, request.NewFatherId, cancellationToken);
         return Ok(result);
     }
@@ -111,6 +142,11 @@ public sealed class PersonsController : ControllerBase
         [FromQuery] Guid? newFatherId = null,
         CancellationToken cancellationToken = default)
     {
+        if (await _clanService.IsPublishedAsync(clanId, cancellationToken))
+        {
+            return Conflict(PublishedError());
+        }
+
         await _personService.DeletePersonAsync(clanId, personId, strategy, newFatherId, cancellationToken);
         return NoContent();
     }
@@ -146,12 +182,18 @@ public sealed class PersonsController : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<ActionResult<string>> UploadPortrait(
         Guid clanId,
         Guid personId,
         IFormFile file,
         CancellationToken cancellationToken)
     {
+        if (await _clanService.IsPublishedAsync(clanId, cancellationToken))
+        {
+            return Conflict(PublishedError());
+        }
+
         if (file is null || file.Length == 0)
         {
             return BadRequest("File ảnh không được để trống.");
@@ -185,4 +227,7 @@ public sealed class PersonsController : ControllerBase
 
         return Ok(url);
     }
+
+    private static object PublishedError()
+        => new { code = "REQUIRES_CHANGE_REQUEST", message = "Dòng họ đã công bố, mọi thay đổi phải gửi đề xuất." };
 }

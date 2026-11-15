@@ -12,6 +12,14 @@ public interface IAuthService
         LoginRequest request,
         CancellationToken cancellationToken = default);
 
+    Task<MagicLinkResponse> RequestMagicLinkAsync(
+        MagicLinkRequest request,
+        CancellationToken cancellationToken = default);
+
+    Task<AuthResponse?> VerifyMagicLinkAsync(
+        MagicLinkVerifyRequest request,
+        CancellationToken cancellationToken = default);
+
     Task<UserDto?> GetProfileAsync(
         Guid userId,
         CancellationToken cancellationToken = default);

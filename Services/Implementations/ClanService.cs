@@ -121,6 +121,39 @@ public sealed class ClanService : IClanService
         return true;
     }
 
+    public async Task<bool> IsPublishedAsync(
+        Guid id,
+        CancellationToken cancellationToken = default)
+    {
+        var clan = await _repository.Clan.GetByIdAsync(id, trackChanges: false, cancellationToken);
+        return clan?.Status == ClanStatus.Published;
+    }
+
+    public async Task<bool> PublishAsync(
+        Guid id,
+        CancellationToken cancellationToken = default)
+    {
+        var clan = await _repository.Clan.GetByIdAsync(
+            id,
+            trackChanges: true,
+            cancellationToken);
+
+        if (clan is null)
+        {
+            return false;
+        }
+
+        clan.Status = ClanStatus.Published;
+        clan.PublishedAt = DateTime.UtcNow;
+        clan.UpdatedAt = DateTime.UtcNow;
+
+        _repository.Clan.Update(clan);
+        await _repository.SaveAsync(cancellationToken);
+
+        _logger.LogInfo($"Đã công bố dòng họ {clan.Id} ('{clan.Name}').");
+        return true;
+    }
+
     private static string NormalizeName(string name)
     {
         var normalized = name.Trim();

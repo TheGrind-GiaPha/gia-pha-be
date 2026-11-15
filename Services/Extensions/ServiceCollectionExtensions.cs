@@ -19,12 +19,15 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IPublicClanService, PublicClanService>();
         services.AddScoped<IClanRoleService, ClanRoleService>();
+        services.AddScoped<IChangeRequestService, ChangeRequestService>();
+        services.AddScoped<IAuditService, AuditService>();
 
-        // Handler thay đổi cho Luồng 1 (ChangeRequest.Apply).
+        // Handler thay đổi cho ChangeRequest.Apply (Luồng 1).
         services.AddScoped<IChangeHandler, AddPersonHandler>();
         services.AddScoped<IChangeHandler, MoveSubtreeHandler>();
         services.AddScoped<IChangeHandler, DeletePersonHandler>();
         services.AddScoped<IChangeHandler, MergePersonsHandler>();
+        services.AddScoped<IChangeHandler, AddUnionHandler>();
 
         return services;
     }
