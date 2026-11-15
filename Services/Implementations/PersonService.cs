@@ -1,3 +1,5 @@
+using System.Globalization;
+using System.Text;
 using GiaPha.BusinessObjects.DTOs.Persons;
 using GiaPha.BusinessObjects.Entities;
 using GiaPha.BusinessObjects.Exceptions;
@@ -317,6 +319,112 @@ public sealed class PersonService : IPersonService
             .ToList();
     }
 
+    public async Task<PersonDto> MergePersonsAsync(
+        Guid clanId,
+        Guid keepId,
+        Guid removeId,
+        CancellationToken cancellationToken = default)
+    {
+        var keep = await _repository.Person.GetByIdAsync(keepId, trackChanges: true, cancellationToken);
+        if (keep is null || keep.ClanId != clanId)
+        {
+            throw new NotFoundException("Không tìm thấy người giữ lại (keep).");
+        }
+
+        var remove = await _repository.Person.GetByIdAsync(removeId, trackChanges: true, cancellationToken);
+        if (remove is null || remove.ClanId != clanId)
+        {
+            throw new NotFoundException("Không tìm thấy người bị gộp (remove).");
+        }
+
+        if (keepId == removeId)
+        {
+            throw new ConflictException("Không thể gộp một người với chính mình.");
+        }
+
+        if (keep.Path.StartsWith(remove.Path, StringComparison.Ordinal)
+            || remove.Path.StartsWith(keep.Path, StringComparison.Ordinal))
+        {
+            throw new ConflictException("Hai người nằm trên cùng dòng tổ tiên, không thể gộp.");
+        }
+
+        // Chuyển con ruột của remove sang keep (re-path + đổi generation).
+        var childLinks = await _repository.ParentChild
+            .GetByParentIdsAsync(new[] { removeId }, RelationType.Biological, cancellationToken);
+
+        foreach (var childLink in childLinks)
+        {
+            await MoveSubtreeAsync(clanId, childLink.ChildId, keepId, cancellationToken);
+        }
+
+        // Xóa quan hệ "là con" của remove (cha ruột / cha nuôi).
+        var removeParentLinks = await _repository.ParentChild.GetAllByChildIdAsync(removeId, cancellationToken);
+        foreach (var link in removeParentLinks)
+        {
+            _repository.ParentChild.Delete(link);
+        }
+
+        // Chuyển quan hệ vợ/chồng của remove sang keep.
+        var unions = await _repository.Union.GetByPersonIdAsync(removeId, cancellationToken);
+        foreach (var union in unions)
+        {
+            if (union.HusbandId == removeId)
+            {
+                union.HusbandId = keepId;
+            }
+
+            if (union.WifeId == removeId)
+            {
+                union.WifeId = keepId;
+            }
+        }
+
+        // Điền field trống của keep từ remove (field đã có của keep được giữ nguyên).
+        keep.HuyName ??= remove.HuyName;
+        keep.TuName ??= remove.TuName;
+        keep.ThuyName ??= remove.ThuyName;
+        keep.BirthDate ??= remove.BirthDate;
+        keep.DeathDate ??= remove.DeathDate;
+        keep.PortraitUrl ??= remove.PortraitUrl;
+        keep.BranchId ??= remove.BranchId;
+
+        // Soft-delete remove + lưu MergedIntoId.
+        remove.Status = PersonStatus.Deleted;
+        remove.MergedIntoId = keepId;
+        remove.UpdatedAt = DateTime.UtcNow;
+
+        await _repository.SaveAsync(cancellationToken);
+        _logger.LogInfo($"Đã gộp người {removeId} vào {keepId}.");
+
+        return Map(keep);
+    }
+
+    public async Task<GraftResultDto> GraftAsync(
+        Guid clanId,
+        Guid rootId,
+        Guid newFatherId,
+        CancellationToken cancellationToken = default)
+    {
+        await MoveSubtreeAsync(clanId, rootId, newFatherId, cancellationToken);
+
+        var root = await _repository.Person.GetByIdAsync(rootId, trackChanges: false, cancellationToken)
+            ?? throw new NotFoundException("Không tìm thấy người vừa ghép.");
+
+        // Phát hiện trùng: cùng tên (bỏ dấu) + cùng năm sinh.
+        var persons = await _repository.Person.GetByClanAsync(clanId, trackChanges: false, cancellationToken);
+        var normalizedName = StripDiacritics(root.FullName);
+        var birthYear = root.BirthDate?.Year;
+
+        var candidates = persons
+            .Where(p => p.Id != rootId
+                && p.BirthDate?.Year == birthYear
+                && StripDiacritics(p.FullName) == normalizedName)
+            .Select(Map)
+            .ToList();
+
+        return new GraftResultDto(Map(root), candidates);
+    }
+
     public async Task SetPortraitAsync(
         Guid clanId,
         Guid personId,
@@ -387,6 +495,23 @@ public sealed class PersonService : IPersonService
         }
 
         return normalized;
+    }
+
+    /// <summary>Bỏ dấu + lowercase tên để so sánh trùng (ví dụ "Nguyễn Văn" == "nguyen van").</summary>
+    private static string StripDiacritics(string name)
+    {
+        var decomposed = name.Normalize(NormalizationForm.FormD);
+        var builder = new StringBuilder();
+
+        foreach (var c in decomposed)
+        {
+            if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+            {
+                builder.Append(c);
+            }
+        }
+
+        return builder.ToString().Normalize(NormalizationForm.FormC).ToLowerInvariant();
     }
 
     private static FlexibleDate? Map(FlexibleDateDto? dto)

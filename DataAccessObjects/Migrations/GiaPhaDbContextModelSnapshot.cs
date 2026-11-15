@@ -184,6 +184,9 @@ namespace GiaPha.DataAccessObjects.Migrations
                     b.Property<bool>("IsLiving")
                         .HasColumnType("bit");
 
+                    b.Property<Guid?>("MergedIntoId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Path")
                         .IsRequired()
                         .HasMaxLength(1000)

@@ -17,4 +17,10 @@ public sealed class UnionRepository : RepositoryBase<Union>, IUnionRepository
         CancellationToken cancellationToken = default)
         => FindByCondition(x => x.HusbandId == husbandId && x.Rank == rank, trackChanges: false)
             .AnyAsync(cancellationToken);
+
+    public async Task<IReadOnlyList<Union>> GetByPersonIdAsync(
+        Guid personId,
+        CancellationToken cancellationToken = default)
+        => await FindByCondition(x => x.HusbandId == personId || x.WifeId == personId, trackChanges: true)
+            .ToListAsync(cancellationToken);
 }

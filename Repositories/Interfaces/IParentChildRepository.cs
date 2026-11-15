@@ -21,4 +21,8 @@ public interface IParentChildRepository : IRepositoryBase<ParentChild>
         IReadOnlyCollection<Guid> parentIds,
         RelationType relationType,
         CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<ParentChild>> GetAllByChildIdAsync(
+        Guid childId,
+        CancellationToken cancellationToken = default);
 }

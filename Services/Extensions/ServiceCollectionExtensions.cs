@@ -1,3 +1,4 @@
+using GiaPha.Services.Handlers;
 using GiaPha.Services.Implementations;
 using GiaPha.Services.Interfaces;
 using GiaPha.Services.Logging;
@@ -15,6 +16,12 @@ public static class ServiceCollectionExtensions
         // Service nghiệp vụ là scoped vì phụ thuộc repository/DbContext scoped.
         services.AddScoped<IClanService, ClanService>();
         services.AddScoped<IPersonService, PersonService>();
+
+        // Handler thay đổi cho Luồng 1 (ChangeRequest.Apply).
+        services.AddScoped<IChangeHandler, AddPersonHandler>();
+        services.AddScoped<IChangeHandler, MoveSubtreeHandler>();
+        services.AddScoped<IChangeHandler, DeletePersonHandler>();
+        services.AddScoped<IChangeHandler, MergePersonsHandler>();
 
         return services;
     }

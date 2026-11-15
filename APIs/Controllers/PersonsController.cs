@@ -65,6 +65,37 @@ public sealed class PersonsController : ControllerBase
         return NoContent();
     }
 
+    /// <summary>Gộp 2 người trùng (giữ keepId, gộp removeId vào).</summary>
+    [HttpPost("{keepId:guid}/merge/{removeId:guid}")]
+    [ProducesResponseType(typeof(PersonDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    public async Task<ActionResult<PersonDto>> MergePersons(
+        Guid clanId,
+        Guid keepId,
+        Guid removeId,
+        CancellationToken cancellationToken)
+    {
+        var merged = await _personService.MergePersonsAsync(clanId, keepId, removeId, cancellationToken);
+        return Ok(merged);
+    }
+
+    /// <summary>Ghép cây con (di chuyển + phát hiện trùng tên/năm sinh).</summary>
+    [HttpPost("{rootId:guid}/graft")]
+    [ProducesResponseType(typeof(GraftResultDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    public async Task<ActionResult<GraftResultDto>> Graft(
+        Guid clanId,
+        Guid rootId,
+        [FromBody] MoveSubtreeRequest request,
+        CancellationToken cancellationToken)
+    {
+        var result = await _personService.GraftAsync(clanId, rootId, request.NewFatherId, cancellationToken);
+        return Ok(result);
+    }
+
     /// <summary>Xóa người (soft-delete) theo chiến lược block/cascade/reparent.</summary>
     [HttpDelete("{personId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

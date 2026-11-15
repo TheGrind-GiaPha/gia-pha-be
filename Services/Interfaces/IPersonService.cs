@@ -45,6 +45,18 @@ public interface IPersonService
         Guid personId,
         CancellationToken cancellationToken = default);
 
+    Task<PersonDto> MergePersonsAsync(
+        Guid clanId,
+        Guid keepId,
+        Guid removeId,
+        CancellationToken cancellationToken = default);
+
+    Task<GraftResultDto> GraftAsync(
+        Guid clanId,
+        Guid rootId,
+        Guid newFatherId,
+        CancellationToken cancellationToken = default);
+
     Task SetPortraitAsync(
         Guid clanId,
         Guid personId,

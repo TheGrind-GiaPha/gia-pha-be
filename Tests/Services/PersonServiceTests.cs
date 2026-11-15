@@ -302,4 +302,62 @@ public sealed class PersonServiceTests
         Assert.Equal("A", result[0].FullName);
         Assert.Equal("B", result[1].FullName);
     }
+
+    [Fact]
+    public async Task MergePersonsAsync_WhenSameLineage_ThrowsConflict()
+    {
+        var keep = new Person { Id = Guid.NewGuid(), ClanId = ClanId, Path = "/1/" };
+        var remove = new Person { Id = Guid.NewGuid(), ClanId = ClanId, Path = "/1/5/" };
+
+        var personRepository = new Mock<IPersonRepository>();
+        personRepository.Setup(x => x.GetByIdAsync(keep.Id, true, It.IsAny<CancellationToken>())).ReturnsAsync(keep);
+        personRepository.Setup(x => x.GetByIdAsync(remove.Id, true, It.IsAny<CancellationToken>())).ReturnsAsync(remove);
+
+        var repositoryManager = new Mock<IRepositoryManager>();
+        repositoryManager.SetupGet(x => x.Person).Returns(personRepository.Object);
+
+        var service = new PersonService(repositoryManager.Object, Mock.Of<ILoggerManager>());
+
+        await Assert.ThrowsAsync<ConflictException>(() =>
+            service.MergePersonsAsync(ClanId, keep.Id, remove.Id));
+    }
+
+    [Fact]
+    public async Task MergePersonsAsync_SoftDeletesRemoveAndFillsFields()
+    {
+        var keep = new Person { Id = Guid.NewGuid(), ClanId = ClanId, FullName = "Keep", Path = "/1/" };
+        var remove = new Person { Id = Guid.NewGuid(), ClanId = ClanId, FullName = "Remove", Path = "/9/", HuyName = "Húy" };
+
+        var personRepository = new Mock<IPersonRepository>();
+        personRepository.Setup(x => x.GetByIdAsync(keep.Id, true, It.IsAny<CancellationToken>())).ReturnsAsync(keep);
+        personRepository.Setup(x => x.GetByIdAsync(remove.Id, true, It.IsAny<CancellationToken>())).ReturnsAsync(remove);
+
+        var parentChildRepository = new Mock<IParentChildRepository>();
+        parentChildRepository
+            .Setup(x => x.GetByParentIdsAsync(It.IsAny<IReadOnlyCollection<Guid>>(), RelationType.Biological, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Array.Empty<ParentChild>());
+        parentChildRepository
+            .Setup(x => x.GetAllByChildIdAsync(remove.Id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Array.Empty<ParentChild>());
+
+        var unionRepository = new Mock<IUnionRepository>();
+        unionRepository
+            .Setup(x => x.GetByPersonIdAsync(remove.Id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Array.Empty<Union>());
+
+        var repositoryManager = new Mock<IRepositoryManager>();
+        repositoryManager.SetupGet(x => x.Person).Returns(personRepository.Object);
+        repositoryManager.SetupGet(x => x.ParentChild).Returns(parentChildRepository.Object);
+        repositoryManager.SetupGet(x => x.Union).Returns(unionRepository.Object);
+        repositoryManager.Setup(x => x.SaveAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
+
+        var service = new PersonService(repositoryManager.Object, Mock.Of<ILoggerManager>());
+
+        var result = await service.MergePersonsAsync(ClanId, keep.Id, remove.Id);
+
+        Assert.Equal(PersonStatus.Deleted, remove.Status);
+        Assert.Equal(keep.Id, remove.MergedIntoId);
+        Assert.Equal("Húy", keep.HuyName);
+        Assert.Equal("Keep", result.FullName);
+    }
 }

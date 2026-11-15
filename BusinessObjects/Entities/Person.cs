@@ -36,5 +36,8 @@ public sealed class Person : BaseEntity
 
     public string? PortraitUrl { get; set; }
 
+    /// <summary>Id của người mà bản ghi này đã bị gộp vào (khi Status = Deleted do merge).</summary>
+    public Guid? MergedIntoId { get; set; }
+
     public int Version { get; set; } = 1;
 }

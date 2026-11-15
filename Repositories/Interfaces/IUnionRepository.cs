@@ -8,4 +8,8 @@ public interface IUnionRepository : IRepositoryBase<Union>
         Guid husbandId,
         int rank,
         CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<Union>> GetByPersonIdAsync(
+        Guid personId,
+        CancellationToken cancellationToken = default);
 }
