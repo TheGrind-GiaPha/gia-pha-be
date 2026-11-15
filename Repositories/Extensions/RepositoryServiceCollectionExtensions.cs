@@ -12,6 +12,7 @@ public static class RepositoryServiceCollectionExtensions
         services.AddScoped<IPersonRepository, PersonRepository>();
         services.AddScoped<IParentChildRepository, ParentChildRepository>();
         services.AddScoped<IUnionRepository, UnionRepository>();
+        services.AddScoped<IAuditLogRepository, AuditLogRepository>();
         services.AddScoped<IRepositoryManager, RepositoryManager>();
         return services;
     }

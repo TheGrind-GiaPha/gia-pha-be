@@ -14,5 +14,7 @@ public interface IRepositoryManager
 
     IUnionRepository Union { get; }
 
+    IAuditLogRepository AuditLog { get; }
+
     Task<int> SaveAsync(CancellationToken cancellationToken = default);
 }

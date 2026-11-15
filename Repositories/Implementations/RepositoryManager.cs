@@ -12,13 +12,15 @@ public sealed class RepositoryManager : IRepositoryManager
         IClanRepository clanRepository,
         IPersonRepository personRepository,
         IParentChildRepository parentChildRepository,
-        IUnionRepository unionRepository)
+        IUnionRepository unionRepository,
+        IAuditLogRepository auditLogRepository)
     {
         _context = context;
         Clan = clanRepository;
         Person = personRepository;
         ParentChild = parentChildRepository;
         Union = unionRepository;
+        AuditLog = auditLogRepository;
     }
 
     public IClanRepository Clan { get; }
@@ -28,6 +30,8 @@ public sealed class RepositoryManager : IRepositoryManager
     public IParentChildRepository ParentChild { get; }
 
     public IUnionRepository Union { get; }
+
+    public IAuditLogRepository AuditLog { get; }
 
     public Task<int> SaveAsync(CancellationToken cancellationToken = default)
         => _context.SaveChangesAsync(cancellationToken);

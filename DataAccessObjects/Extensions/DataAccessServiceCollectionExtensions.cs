@@ -30,6 +30,7 @@ public static class DataAccessServiceCollectionExtensions
 
         services.AddScoped(typeof(IGenericDao<>), typeof(GenericDao<>));
         services.AddScoped<IClanDao, ClanDao>();
+        services.AddScoped<IAuditLogDao, AuditLogDao>();
         services.AddScoped<GenealogySeeder>();
 
         return services;
