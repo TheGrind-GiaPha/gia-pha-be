@@ -38,6 +38,7 @@ public sealed class GenealogySeeder
                 Description = "Phả hệ nhà Nguyễn (1802–1945): trục chính 13 đời vua + các nhánh tiêu biểu. Dấu … là nhân vật chưa đưa vào.",
                 OriginStory = "Triều Nguyễn là vương triều quân chủ cuối cùng của Việt Nam, do dòng họ Nguyễn Phúc sáng lập năm 1802.",
                 Status = ClanStatus.Published,
+                Visibility = ClanVisibility.Public,
                 PublishedAt = DateTime.UtcNow
             };
 

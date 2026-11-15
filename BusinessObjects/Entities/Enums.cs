@@ -44,3 +44,10 @@ public enum ClanStatus
     Draft = 0,
     Published = 1
 }
+
+/// <summary>Chế độ hiển thị của dòng họ: riêng tư hoặc công khai cho khách xem.</summary>
+public enum ClanVisibility
+{
+    Private = 0,
+    Public = 1
+}

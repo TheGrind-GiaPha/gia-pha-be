@@ -91,6 +91,11 @@ namespace GiaPha.DataAccessObjects.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Visibility")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
@@ -105,7 +110,8 @@ namespace GiaPha.DataAccessObjects.Migrations
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Dữ liệu mẫu phục vụ kiểm thử luồng API và giao diện.",
                             Name = "Gia phả họ Nguyễn Hữu",
-                            Status = 0
+                            Status = 0,
+                            Visibility = 0
                         },
                         new
                         {
@@ -113,7 +119,8 @@ namespace GiaPha.DataAccessObjects.Migrations
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Dữ liệu mẫu phục vụ kiểm thử luồng API và giao diện.",
                             Name = "Gia phả họ Trần",
-                            Status = 0
+                            Status = 0,
+                            Visibility = 0
                         });
                 });
 

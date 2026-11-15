@@ -17,4 +17,7 @@ public interface IClanRepository : IRepositoryBase<Clan>
     Task<bool> ExistsByNameAsync(
         string name,
         CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<Clan>> GetPublicAsync(
+        CancellationToken cancellationToken = default);
 }

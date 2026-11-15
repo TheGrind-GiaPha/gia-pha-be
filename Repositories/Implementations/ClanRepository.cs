@@ -41,4 +41,10 @@ public sealed class ClanRepository : RepositoryBase<Clan>, IClanRepository
         CancellationToken cancellationToken = default)
         => FindByCondition(x => x.Name == name, trackChanges: false)
             .AnyAsync(cancellationToken);
+
+    public async Task<IReadOnlyList<Clan>> GetPublicAsync(
+        CancellationToken cancellationToken = default)
+        => await FindByCondition(x => x.Visibility == ClanVisibility.Public, trackChanges: false)
+            .OrderBy(x => x.Name)
+            .ToListAsync(cancellationToken);
 }
