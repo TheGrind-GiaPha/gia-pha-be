@@ -12,6 +12,8 @@ public sealed class GiaPhaDbContext : DbContext
 
     public DbSet<Clan> Clans => Set<Clan>();
 
+    public DbSet<User> Users => Set<User>();
+
     public DbSet<Branch> Branches => Set<Branch>();
 
     public DbSet<Person> Persons => Set<Person>();

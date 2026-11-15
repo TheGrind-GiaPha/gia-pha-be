@@ -8,6 +8,8 @@ public interface IRepositoryManager
 {
     IClanRepository Clan { get; }
 
+    IUserRepository User { get; }
+
     IPersonRepository Person { get; }
 
     IParentChildRepository ParentChild { get; }

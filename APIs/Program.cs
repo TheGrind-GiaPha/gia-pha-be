@@ -1,9 +1,14 @@
+using System.Text;
 using GiaPha.APIs.Middleware;
 using GiaPha.DataAccessObjects.Context;
 using GiaPha.DataAccessObjects.Extensions;
 using GiaPha.DataAccessObjects.Seed;
 using GiaPha.Repositories.Extensions;
 using GiaPha.Services.Extensions;
+using GiaPha.Services.Options;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,12 +22,60 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1",
         Description = "API khung cho Hệ thống Quản lý Gia phả Dòng họ Việt Nam (VGMS)."
     });
+
+    // Cho phép nhập JWT trong Swagger để test endpoint [Authorize].
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Dán JWT (không cần chữ 'Bearer ')."
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
 });
 
 // ProblemDetails + global exception handler.
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddAuthorization();
+
+// JWT: cấu hình dùng chung cho AuthService (phát token) và middleware (kiểm token).
+var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>()
+    ?? throw new InvalidOperationException("Thiếu cấu hình 'Jwt' trong appsettings.json.");
+builder.Services.AddSingleton(jwtSettings);
+
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.MapInboundClaims = false;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = jwtSettings.Issuer,
+            ValidateAudience = true,
+            ValidAudience = jwtSettings.Audience,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret)),
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
+        };
+    });
 
 var allowedOrigins = builder.Configuration
     .GetSection("Cors:AllowedOrigins")
@@ -61,6 +114,7 @@ if (app.Environment.IsDevelopment())
 app.UseExceptionHandler();
 app.UseStaticFiles();
 app.UseCors("Frontend");
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

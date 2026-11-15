@@ -1,10 +1,12 @@
 using GiaPha.BusinessObjects.DTOs.Clans;
 using GiaPha.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GiaPha.APIs.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
 [Produces("application/json")]
 public sealed class ClansController : ControllerBase

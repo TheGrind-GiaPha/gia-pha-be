@@ -25,6 +25,7 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
         var (statusCode, title) = exception switch
         {
             ConflictException => (StatusCodes.Status409Conflict, "Xung đột dữ liệu"),
+            UnauthorizedException => (StatusCodes.Status401Unauthorized, "Không được phép"),
             NotFoundException => (StatusCodes.Status404NotFound, "Không tìm thấy"),
             ArgumentException => (StatusCodes.Status400BadRequest, "Dữ liệu không hợp lệ"),
             DbUpdateException => (StatusCodes.Status409Conflict, "Không thể lưu dữ liệu"),

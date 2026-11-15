@@ -16,6 +16,7 @@ public static class ServiceCollectionExtensions
         // Service nghiệp vụ là scoped vì phụ thuộc repository/DbContext scoped.
         services.AddScoped<IClanService, ClanService>();
         services.AddScoped<IPersonService, PersonService>();
+        services.AddScoped<IAuthService, AuthService>();
 
         // Handler thay đổi cho Luồng 1 (ChangeRequest.Apply).
         services.AddScoped<IChangeHandler, AddPersonHandler>();

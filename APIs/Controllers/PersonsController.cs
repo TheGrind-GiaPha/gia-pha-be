@@ -1,10 +1,12 @@
 using GiaPha.BusinessObjects.DTOs.Persons;
 using GiaPha.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GiaPha.APIs.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/clans/{clanId:guid}/persons")]
 [Produces("application/json")]
 public sealed class PersonsController : ControllerBase
