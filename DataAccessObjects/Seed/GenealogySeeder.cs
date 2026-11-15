@@ -45,38 +45,51 @@ public sealed class GenealogySeeder
         }
 
         // Đời 1
-        var giaLong = Root(clan.Id, "Nguyễn Phúc Ánh (Gia Long)", "Ánh", 1762, 2, 8, 1820, 2, 3);
+        var giaLong = Root(clan.Id, "Nguyễn Phúc Ánh (Gia Long)", "Ánh",
+            birth: SolarDate(1762, 2, 8), death: SolarDate(1820, 2, 3));
 
         // Đời 2
-        var minhMang = Child(clan.Id, giaLong, "Nguyễn Phúc Đảm (Minh Mạng)", "Đảm", RelationType.Biological, 1, 1791, 5, 25, 1841, 1, 20);
+        var minhMang = Child(clan.Id, giaLong, "Nguyễn Phúc Đảm (Minh Mạng)", "Đảm", 1,
+            birth: SolarDate(1791, 5, 25), death: SolarDate(1841, 1, 20));
 
         // Đời 3
-        var thieuTri = Child(clan.Id, minhMang, "Nguyễn Phúc Miên Tông (Thiệu Trị)", "Miên Tông", RelationType.Biological, 1, 1807, 6, 16, 1847, 10, 4);
+        var thieuTri = Child(clan.Id, minhMang, "Nguyễn Phúc Miên Tông (Thiệu Trị)", "Miên Tông", 1,
+            birth: SolarDate(1807, 6, 16), death: SolarDate(1847, 10, 4));
 
         // Đời 4: các con của Thiệu Trị
-        var tuDuc = Child(clan.Id, thieuTri, "Nguyễn Phúc Hồng Nhậm (Tự Đức)", "Hồng Nhậm", RelationType.Biological, 1, 1829, 9, 22, 1883, 7, 19);
-        var hongY = Child(clan.Id, thieuTri, "Nguyễn Phúc Hồng Y (Thụy Thái vương)", "Hồng Y", RelationType.Biological, 2, null, null, null, null, null, null);
-        var hongCai = Child(clan.Id, thieuTri, "Nguyễn Phúc Hồng Cai (Kiên Thái vương)", "Hồng Cai", RelationType.Biological, 3, null, null, null, null, null, null);
-        var hiepHoa = Child(clan.Id, thieuTri, "Nguyễn Phúc Hồng Dật (Hiệp Hòa)", "Hồng Dật", RelationType.Biological, 4, 1847, 11, 1, 1883, 11, 29);
+        var tuDuc = Child(clan.Id, thieuTri, "Nguyễn Phúc Hồng Nhậm (Tự Đức)", "Hồng Nhậm", 1,
+            birth: SolarDate(1829, 9, 22), death: SolarDate(1883, 7, 19));
+        var hongY = Child(clan.Id, thieuTri, "Nguyễn Phúc Hồng Y (Thụy Thái vương)", "Hồng Y", 2);
+        var hongCai = Child(clan.Id, thieuTri, "Nguyễn Phúc Hồng Cai (Kiên Thái vương)", "Hồng Cai", 3);
+        var hiepHoa = Child(clan.Id, thieuTri, "Nguyễn Phúc Hồng Dật (Hiệp Hòa)", "Hồng Dật", 4,
+            birth: SolarDate(1847, 11, 1), death: SolarDate(1883, 11, 29));
 
         // Đời 5
-        var ducDuc = Child(clan.Id, hongY, "Nguyễn Phúc Ưng Chân (Dục Đức)", "Ưng Chân", RelationType.Biological, 1, 1852, 2, 23, 1883, 10, 6);
-        var dongKhanh = Child(clan.Id, hongCai, "Nguyễn Phúc Ưng Kỷ (Đồng Khánh)", "Ưng Kỷ", RelationType.Biological, 1, 1864, 2, 19, 1889, 1, 28);
-        var kienPhuc = Child(clan.Id, hongCai, "Nguyễn Phúc Ưng Đăng (Kiến Phúc)", "Ưng Đăng", RelationType.Biological, 2, 1869, 2, 12, 1884, 7, 31);
-        var hamNghi = Child(clan.Id, hongCai, "Nguyễn Phúc Ưng Lịch (Hàm Nghi)", "Ưng Lịch", RelationType.Biological, 3, 1871, 8, 3, 1944, 1, 14);
+        var ducDuc = Child(clan.Id, hongY, "Nguyễn Phúc Ưng Chân (Dục Đức)", "Ưng Chân", 1,
+            birth: SolarDate(1852, 2, 23), death: SolarDate(1883, 10, 6));
+        var dongKhanh = Child(clan.Id, hongCai, "Nguyễn Phúc Ưng Kỷ (Đồng Khánh)", "Ưng Kỷ", 1,
+            birth: SolarDate(1864, 2, 19), death: SolarDate(1889, 1, 28));
+        var kienPhuc = Child(clan.Id, hongCai, "Nguyễn Phúc Ưng Đăng (Kiến Phúc)", "Ưng Đăng", 2,
+            birth: SolarDate(1869, 2, 12), death: SolarDate(1884, 7, 31));
+        var hamNghi = Child(clan.Id, hongCai, "Nguyễn Phúc Ưng Lịch (Hàm Nghi)", "Ưng Lịch", 3,
+            birth: SolarDate(1871, 8, 3), death: SolarDate(1944, 1, 14));
 
         // Đời 6
-        var thanhThai = Child(clan.Id, ducDuc, "Nguyễn Phúc Bửu Lân (Thành Thái)", "Bửu Lân", RelationType.Biological, 1, 1879, 3, 14, 1954, 3, 24);
-        var khaiDinh = Child(clan.Id, dongKhanh, "Nguyễn Phúc Bửu Đảo (Khải Định)", "Bửu Đảo", RelationType.Biological, 1, 1885, 10, 8, 1925, 11, 6);
+        var thanhThai = Child(clan.Id, ducDuc, "Nguyễn Phúc Bửu Lân (Thành Thái)", "Bửu Lân", 1,
+            birth: SolarDate(1879, 3, 14), death: SolarDate(1954, 3, 24));
+        var khaiDinh = Child(clan.Id, dongKhanh, "Nguyễn Phúc Bửu Đảo (Khải Định)", "Bửu Đảo", 1,
+            birth: SolarDate(1885, 10, 8), death: SolarDate(1925, 11, 6));
 
         // Đời 7
-        var duyTan = Child(clan.Id, thanhThai, "Nguyễn Phúc Vĩnh San (Duy Tân)", "Vĩnh San", RelationType.Biological, 1, 1900, 9, 19, 1945, 12, 26);
-        var baoDai = Child(clan.Id, khaiDinh, "Nguyễn Phúc Vĩnh Thụy (Bảo Đại)", "Vĩnh Thụy", RelationType.Biological, 1, 1913, 10, 22, 1997, 7, 30);
+        var duyTan = Child(clan.Id, thanhThai, "Nguyễn Phúc Vĩnh San (Duy Tân)", "Vĩnh San", 1,
+            birth: SolarDate(1900, 9, 19), death: SolarDate(1945, 12, 26));
+        var baoDai = Child(clan.Id, khaiDinh, "Nguyễn Phúc Vĩnh Thụy (Bảo Đại)", "Vĩnh Thụy", 1,
+            birth: SolarDate(1913, 10, 22), death: SolarDate(1997, 7, 30));
 
         // Tự Đức không có con, nhận 3 cháu làm con nuôi.
-        Link(tuDuc, ducDuc, RelationType.Adopted);
-        Link(tuDuc, dongKhanh, RelationType.Adopted);
-        Link(tuDuc, kienPhuc, RelationType.Adopted);
+        Adopt(tuDuc, ducDuc);
+        Adopt(tuDuc, dongKhanh);
+        Adopt(tuDuc, kienPhuc);
 
         await _context.SaveChangesAsync(cancellationToken);
         return 15;
@@ -86,10 +99,10 @@ public sealed class GenealogySeeder
         Guid clanId,
         string fullName,
         string huyName,
-        int? birthYear, int? birthMonth, int? birthDay,
-        int? deathYear, int? deathMonth, int? deathDay)
+        FlexibleDate? birth = null,
+        FlexibleDate? death = null)
     {
-        var person = CreatePerson(clanId, fullName, huyName, birthYear, birthMonth, birthDay, deathYear, deathMonth, deathDay);
+        var person = CreatePerson(clanId, fullName, huyName, birth, death);
         person.Generation = 1;
         person.Path = $"/{person.Id}/";
 
@@ -102,12 +115,11 @@ public sealed class GenealogySeeder
         Person father,
         string fullName,
         string huyName,
-        RelationType relationType,
         int siblingOrder,
-        int? birthYear, int? birthMonth, int? birthDay,
-        int? deathYear, int? deathMonth, int? deathDay)
+        FlexibleDate? birth = null,
+        FlexibleDate? death = null)
     {
-        var person = CreatePerson(clanId, fullName, huyName, birthYear, birthMonth, birthDay, deathYear, deathMonth, deathDay);
+        var person = CreatePerson(clanId, fullName, huyName, birth, death);
         person.Generation = father.Generation + 1;
         person.Path = father.Path + person.Id + "/";
 
@@ -116,20 +128,20 @@ public sealed class GenealogySeeder
         {
             ParentId = father.Id,
             ChildId = person.Id,
-            RelationType = relationType,
+            RelationType = RelationType.Biological,
             SiblingOrder = siblingOrder
         });
 
         return person;
     }
 
-    private void Link(Person parent, Person child, RelationType relationType)
+    private void Adopt(Person parent, Person child)
     {
         _context.ParentChild.Add(new ParentChild
         {
             ParentId = parent.Id,
             ChildId = child.Id,
-            RelationType = relationType,
+            RelationType = RelationType.Adopted,
             SiblingOrder = 0
         });
     }
@@ -138,23 +150,23 @@ public sealed class GenealogySeeder
         Guid clanId,
         string fullName,
         string huyName,
-        int? birthYear, int? birthMonth, int? birthDay,
-        int? deathYear, int? deathMonth, int? deathDay)
+        FlexibleDate? birth,
+        FlexibleDate? death)
         => new()
         {
             ClanId = clanId,
             FullName = fullName,
             HuyName = huyName,
             Gender = Gender.Male,
-            BirthDate = Date(birthYear, birthMonth, birthDay),
-            DeathDate = Date(deathYear, deathMonth, deathDay),
+            BirthDate = birth,
+            DeathDate = death,
             IsLiving = false,
             Status = PersonStatus.Active,
             PrivacyLevel = PrivacyLevel.Public,
             Version = 1
         };
 
-    private static FlexibleDate? Date(int? year, int? month, int? day)
+    private static FlexibleDate? SolarDate(int? year, int? month, int? day)
         => year is null
             ? null
             : new FlexibleDate
