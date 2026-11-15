@@ -89,6 +89,21 @@ public sealed class AuditDiffFormatterTests
     }
 
     [Fact]
+    public void ToDto_MarksOccurredAtAsUtc_WhenDatabaseReturnsUnspecified()
+    {
+        var log = new AuditLog
+        {
+            EntityType = "Person",
+            Action = AuditAction.Update,
+            OccurredAt = new DateTime(2026, 11, 15, 14, 55, 47, DateTimeKind.Unspecified)
+        };
+
+        var dto = AuditDiffFormatter.ToDto(log);
+
+        Assert.Equal(DateTimeKind.Utc, dto.OccurredAt.Kind);
+    }
+
+    [Fact]
     public void ToDto_FormatsDeleteSnapshot()
     {
         var log = new AuditLog

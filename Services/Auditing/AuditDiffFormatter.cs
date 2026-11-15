@@ -79,6 +79,9 @@ public static class AuditDiffFormatter
     {
         var before = Parse(log.Before);
         var after = Parse(log.After);
+        var occurredAt = log.OccurredAt.Kind == DateTimeKind.Unspecified
+            ? DateTime.SpecifyKind(log.OccurredAt, DateTimeKind.Utc)
+            : log.OccurredAt.ToUniversalTime();
 
         return new AuditLogDto(
             log.Id,
@@ -93,7 +96,7 @@ public static class AuditDiffFormatter
             log.BatchId,
             BuildSummary(log, before, after),
             BuildChanges(log.EntityType, before, after),
-            log.OccurredAt);
+            occurredAt);
     }
 
     private static IReadOnlyList<AuditChangeDto> BuildChanges(
