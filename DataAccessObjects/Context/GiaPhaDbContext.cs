@@ -24,6 +24,14 @@ public sealed class GiaPhaDbContext : DbContext
 
     public DbSet<Union> Unions => Set<Union>();
 
+    public DbSet<ImportBatch> ImportBatches => Set<ImportBatch>();
+
+    public DbSet<ImportRow> ImportRows => Set<ImportRow>();
+
+    public DbSet<ExportJob> ExportJobs => Set<ExportJob>();
+
+    public DbSet<ChangeRequest> ChangeRequests => Set<ChangeRequest>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Mọi configuration nằm trong DataAccessObjects/Configurations.

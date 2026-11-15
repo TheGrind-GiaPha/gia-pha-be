@@ -14,7 +14,11 @@ public sealed class RepositoryManager : IRepositoryManager
         IUserClanRoleRepository userClanRoleRepository,
         IPersonRepository personRepository,
         IParentChildRepository parentChildRepository,
-        IUnionRepository unionRepository)
+        IUnionRepository unionRepository,
+        IImportBatchRepository importBatchRepository,
+        IImportRowRepository importRowRepository,
+        IExportJobRepository exportJobRepository,
+        IChangeRequestRepository changeRequestRepository)
     {
         _context = context;
         Clan = clanRepository;
@@ -23,6 +27,10 @@ public sealed class RepositoryManager : IRepositoryManager
         Person = personRepository;
         ParentChild = parentChildRepository;
         Union = unionRepository;
+        ImportBatch = importBatchRepository;
+        ImportRow = importRowRepository;
+        ExportJob = exportJobRepository;
+        ChangeRequest = changeRequestRepository;
     }
 
     public IClanRepository Clan { get; }
@@ -36,6 +44,14 @@ public sealed class RepositoryManager : IRepositoryManager
     public IParentChildRepository ParentChild { get; }
 
     public IUnionRepository Union { get; }
+
+    public IImportBatchRepository ImportBatch { get; }
+
+    public IImportRowRepository ImportRow { get; }
+
+    public IExportJobRepository ExportJob { get; }
+
+    public IChangeRequestRepository ChangeRequest { get; }
 
     public Task<int> SaveAsync(CancellationToken cancellationToken = default)
         => _context.SaveChangesAsync(cancellationToken);

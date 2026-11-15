@@ -20,11 +20,20 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IPublicClanService, PublicClanService>();
         services.AddScoped<IClanRoleService, ClanRoleService>();
 
+        // Flow 4: Import & Export Services
+        services.AddScoped<IExcelImportService, ExcelImportService>();
+        services.AddScoped<IWordImportService, WordImportService>();
+        services.AddHttpClient<ILlmExtractionService, GeminiExtractionService>();
+        services.AddScoped<IDuplicateDetectionService, DuplicateDetectionService>();
+        services.AddScoped<IImportService, ImportService>();
+        services.AddScoped<IExportService, ExportService>();
+
         // Handler thay đổi cho Luồng 1 (ChangeRequest.Apply).
         services.AddScoped<IChangeHandler, AddPersonHandler>();
         services.AddScoped<IChangeHandler, MoveSubtreeHandler>();
         services.AddScoped<IChangeHandler, DeletePersonHandler>();
         services.AddScoped<IChangeHandler, MergePersonsHandler>();
+        services.AddScoped<IChangeHandler, ImportBatchChangeHandler>();
 
         return services;
     }

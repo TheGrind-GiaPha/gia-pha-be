@@ -18,5 +18,13 @@ public interface IRepositoryManager
 
     IUnionRepository Union { get; }
 
+    IImportBatchRepository ImportBatch { get; }
+
+    IImportRowRepository ImportRow { get; }
+
+    IExportJobRepository ExportJob { get; }
+
+    IChangeRequestRepository ChangeRequest { get; }
+
     Task<int> SaveAsync(CancellationToken cancellationToken = default);
 }
