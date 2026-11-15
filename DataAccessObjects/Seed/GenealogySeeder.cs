@@ -59,7 +59,8 @@ public sealed class GenealogySeeder
         // Đời 4: các con của Thiệu Trị
         var tuDuc = Child(clan.Id, thieuTri, "Nguyễn Phúc Hồng Nhậm (Tự Đức)", "Hồng Nhậm", 1,
             birth: SolarDate(1829, 9, 22), death: SolarDate(1883, 7, 19));
-        var hongY = Child(clan.Id, thieuTri, "Nguyễn Phúc Hồng Y (Thụy Thái vương)", "Hồng Y", 2);
+        var hongY = Child(clan.Id, thieuTri, "Nguyễn Phúc Hồng Y (Thụy Thái vương)", "Hồng Y", 2,
+            birth: SolarDate(1833, 9, 11), death: SolarDate(1877, 2, 23));
         var hongCai = Child(clan.Id, thieuTri, "Nguyễn Phúc Hồng Cai (Kiên Thái vương)", "Hồng Cai", 3);
         var hiepHoa = Child(clan.Id, thieuTri, "Nguyễn Phúc Hồng Dật (Hiệp Hòa)", "Hồng Dật", 4,
             birth: SolarDate(1847, 11, 1), death: SolarDate(1883, 11, 29));
@@ -84,7 +85,7 @@ public sealed class GenealogySeeder
         var duyTan = Child(clan.Id, thanhThai, "Nguyễn Phúc Vĩnh San (Duy Tân)", "Vĩnh San", 1,
             birth: SolarDate(1900, 9, 19), death: SolarDate(1945, 12, 26));
         var baoDai = Child(clan.Id, khaiDinh, "Nguyễn Phúc Vĩnh Thụy (Bảo Đại)", "Vĩnh Thụy", 1,
-            birth: SolarDate(1913, 10, 22), death: SolarDate(1997, 7, 30));
+            birth: SolarDate(1913, 10, 22), death: SolarDate(1997, 7, 31));
 
         // Tự Đức không có con, nhận 3 cháu làm con nuôi.
         Adopt(tuDuc, ducDuc);
