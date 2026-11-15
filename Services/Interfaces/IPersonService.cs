@@ -9,6 +9,22 @@ public interface IPersonService
         Guid personId,
         CancellationToken cancellationToken = default);
 
+    Task<PersonProfileDto?> GetProfileAsync(
+        Guid clanId,
+        Guid personId,
+        CancellationToken cancellationToken = default);
+
+    Task<PersonDto> CreateRootAsync(
+        Guid clanId,
+        PersonProfileRequest request,
+        CancellationToken cancellationToken = default);
+
+    Task<PersonProfileDto?> UpdateAsync(
+        Guid clanId,
+        Guid personId,
+        PersonProfileRequest request,
+        CancellationToken cancellationToken = default);
+
     Task<IReadOnlyList<PersonDto>> AddChildrenAsync(
         Guid clanId,
         Guid fatherId,

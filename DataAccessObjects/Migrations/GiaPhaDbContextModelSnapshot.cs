@@ -308,11 +308,27 @@ namespace GiaPha.DataAccessObjects.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Biography")
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
                     b.Property<Guid?>("BranchId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("BurialMapUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("BurialPlace")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<Guid>("ClanId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Contact")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -340,6 +356,10 @@ namespace GiaPha.DataAccessObjects.Migrations
 
                     b.Property<Guid?>("MergedIntoId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("OtherNames")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Path")
                         .IsRequired()

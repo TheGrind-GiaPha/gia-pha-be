@@ -22,13 +22,23 @@ public sealed class GenealogySeeder
 
     public async Task<int> SeedAsync(CancellationToken cancellationToken = default)
     {
+        // Idempotent: dòng họ mẫu luôn ở trạng thái Draft để còn chỉnh sửa cây.
+        // Tránh trường hợp DB cũ đã từng publish khiến cây bị khóa (409).
+        var existingClan = await _context.Clans
+            .FirstOrDefaultAsync(x => x.Name == ClanName, cancellationToken);
+        if (existingClan is not null && existingClan.Status != ClanStatus.Draft)
+        {
+            existingClan.Status = ClanStatus.Draft;
+            existingClan.PublishedAt = null;
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+
         if (await _context.Persons.AnyAsync(cancellationToken))
         {
             return 0;
         }
 
-        var clan = await _context.Clans
-            .FirstOrDefaultAsync(x => x.Name == ClanName, cancellationToken);
+        var clan = existingClan;
 
         if (clan is null)
         {
@@ -37,9 +47,9 @@ public sealed class GenealogySeeder
                 Name = ClanName,
                 Description = "Phả hệ nhà Nguyễn (1802–1945).",
                 OriginStory = "Triều Nguyễn là vương triều quân chủ cuối cùng của Việt Nam, do dòng họ Nguyễn Phúc sáng lập năm 1802.",
-                Status = ClanStatus.Published,
-                Visibility = ClanVisibility.Public,
-                PublishedAt = DateTime.UtcNow
+                // Draft để còn sửa cây (biên tập). Người duyệt bấm "Publish" khi đã xong.
+                Status = ClanStatus.Draft,
+                Visibility = ClanVisibility.Public
             };
 
             _context.Clans.Add(clan);

@@ -18,6 +18,8 @@ public sealed class Person : BaseEntity
 
     public string? ThuyName { get; set; }
 
+    public string? OtherNames { get; set; }
+
     public Gender Gender { get; set; }
 
     public FlexibleDate? BirthDate { get; set; }
@@ -35,6 +37,15 @@ public sealed class Person : BaseEntity
     public PrivacyLevel PrivacyLevel { get; set; } = PrivacyLevel.Public;
 
     public string? PortraitUrl { get; set; }
+
+    public string? Biography { get; set; }
+
+    public string? BurialPlace { get; set; }
+
+    public string? BurialMapUrl { get; set; }
+
+    /// <summary>Thông tin liên lạc (số điện thoại / email / Zalo...) của người này.</summary>
+    public string? Contact { get; set; }
 
     /// <summary>Id của người mà bản ghi này đã bị gộp vào (khi Status = Deleted do merge).</summary>
     public Guid? MergedIntoId { get; set; }
