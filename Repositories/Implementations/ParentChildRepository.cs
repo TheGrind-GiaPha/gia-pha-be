@@ -20,4 +20,24 @@ public sealed class ParentChildRepository : RepositoryBase<ParentChild>, IParent
 
         return max ?? 0;
     }
+
+    public Task<ParentChild?> GetByChildIdAsync(
+        Guid childId,
+        RelationType relationType,
+        CancellationToken cancellationToken = default)
+        => FindByCondition(x => x.ChildId == childId && x.RelationType == relationType, trackChanges: true)
+            .FirstOrDefaultAsync(cancellationToken);
+
+    public Task<bool> ExistsByParentAsync(
+        Guid parentId,
+        CancellationToken cancellationToken = default)
+        => FindByCondition(x => x.ParentId == parentId, trackChanges: false)
+            .AnyAsync(cancellationToken);
+
+    public async Task<IReadOnlyList<ParentChild>> GetByParentIdsAsync(
+        IReadOnlyCollection<Guid> parentIds,
+        RelationType relationType,
+        CancellationToken cancellationToken = default)
+        => await FindByCondition(x => parentIds.Contains(x.ParentId) && x.RelationType == relationType, trackChanges: false)
+            .ToListAsync(cancellationToken);
 }

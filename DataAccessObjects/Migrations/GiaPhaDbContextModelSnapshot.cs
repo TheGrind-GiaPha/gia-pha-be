@@ -189,6 +189,9 @@ namespace GiaPha.DataAccessObjects.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
+                    b.Property<string>("PortraitUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("PrivacyLevel")
                         .HasColumnType("int");
 

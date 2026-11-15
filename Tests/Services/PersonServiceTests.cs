@@ -155,4 +155,151 @@ public sealed class PersonServiceTests
         await Assert.ThrowsAsync<NotFoundException>(() =>
             service.AddUnionAsync(ClanId, husband.Id, new AddUnionRequest { WifeId = wifeId, Rank = 1 }));
     }
+
+    [Fact]
+    public async Task MoveSubtreeAsync_UpdatesPathAndGeneration()
+    {
+        var person = new Person { Id = Guid.NewGuid(), ClanId = ClanId, Generation = 4, Path = "/1/5/12/" };
+        var newFather = new Person { Id = Guid.NewGuid(), ClanId = ClanId, Generation = 2, Path = "/9/" };
+        var descendant = new Person { Id = Guid.NewGuid(), ClanId = ClanId, Generation = 5, Path = "/1/5/12/30/" };
+        var link = new ParentChild { ParentId = Guid.NewGuid(), ChildId = person.Id, RelationType = RelationType.Biological };
+
+        var personRepository = new Mock<IPersonRepository>();
+        personRepository.Setup(x => x.GetByIdAsync(person.Id, true, It.IsAny<CancellationToken>())).ReturnsAsync(person);
+        personRepository.Setup(x => x.GetByIdAsync(newFather.Id, false, It.IsAny<CancellationToken>())).ReturnsAsync(newFather);
+        personRepository
+            .Setup(x => x.GetByPathPrefixAsync("/1/5/12/", true, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new[] { person, descendant });
+
+        var parentChildRepository = new Mock<IParentChildRepository>();
+        parentChildRepository
+            .Setup(x => x.GetByChildIdAsync(person.Id, RelationType.Biological, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(link);
+        parentChildRepository.Setup(x => x.GetMaxSiblingOrderAsync(newFather.Id, It.IsAny<CancellationToken>())).ReturnsAsync(0);
+
+        var repositoryManager = new Mock<IRepositoryManager>();
+        repositoryManager.SetupGet(x => x.Person).Returns(personRepository.Object);
+        repositoryManager.SetupGet(x => x.ParentChild).Returns(parentChildRepository.Object);
+        repositoryManager.Setup(x => x.SaveAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
+
+        var service = new PersonService(repositoryManager.Object, Mock.Of<ILoggerManager>());
+
+        await service.MoveSubtreeAsync(ClanId, person.Id, newFather.Id);
+
+        Assert.Equal($"/9/{person.Id}/", person.Path);
+        Assert.Equal(3, person.Generation);
+        Assert.Equal($"/9/{person.Id}/30/", descendant.Path);
+        Assert.Equal(4, descendant.Generation);
+        Assert.Equal(newFather.Id, link.ParentId);
+        repositoryManager.Verify(x => x.SaveAsync(It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task DeletePersonAsync_BlockWhenHasChildren_ThrowsConflict()
+    {
+        var person = new Person { Id = Guid.NewGuid(), ClanId = ClanId, Path = "/1/" };
+
+        var personRepository = new Mock<IPersonRepository>();
+        personRepository.Setup(x => x.GetByIdAsync(person.Id, true, It.IsAny<CancellationToken>())).ReturnsAsync(person);
+
+        var parentChildRepository = new Mock<IParentChildRepository>();
+        parentChildRepository.Setup(x => x.ExistsByParentAsync(person.Id, It.IsAny<CancellationToken>())).ReturnsAsync(true);
+
+        var repositoryManager = new Mock<IRepositoryManager>();
+        repositoryManager.SetupGet(x => x.Person).Returns(personRepository.Object);
+        repositoryManager.SetupGet(x => x.ParentChild).Returns(parentChildRepository.Object);
+
+        var service = new PersonService(repositoryManager.Object, Mock.Of<ILoggerManager>());
+
+        await Assert.ThrowsAsync<ConflictException>(() =>
+            service.DeletePersonAsync(ClanId, person.Id, "block"));
+    }
+
+    [Fact]
+    public async Task DeletePersonAsync_Cascade_SoftDeletesSubtree()
+    {
+        var person = new Person { Id = Guid.NewGuid(), ClanId = ClanId, Path = "/1/5/12/", Status = PersonStatus.Active };
+        var descendant = new Person { Id = Guid.NewGuid(), ClanId = ClanId, Path = "/1/5/12/30/", Status = PersonStatus.Active };
+
+        var personRepository = new Mock<IPersonRepository>();
+        personRepository.Setup(x => x.GetByIdAsync(person.Id, true, It.IsAny<CancellationToken>())).ReturnsAsync(person);
+        personRepository
+            .Setup(x => x.GetByPathPrefixAsync(person.Path, true, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new[] { person, descendant });
+
+        var repositoryManager = new Mock<IRepositoryManager>();
+        repositoryManager.SetupGet(x => x.Person).Returns(personRepository.Object);
+        repositoryManager.Setup(x => x.SaveAsync(It.IsAny<CancellationToken>())).ReturnsAsync(1);
+
+        var service = new PersonService(repositoryManager.Object, Mock.Of<ILoggerManager>());
+
+        await service.DeletePersonAsync(ClanId, person.Id, "cascade");
+
+        Assert.Equal(PersonStatus.Deleted, person.Status);
+        Assert.Equal(PersonStatus.Deleted, descendant.Status);
+    }
+
+    [Fact]
+    public async Task GetTreeAsync_BuildsNestedTree()
+    {
+        var root = new Person { Id = Guid.NewGuid(), ClanId = ClanId, FullName = "Gia Long", Generation = 1, Path = "/r/" };
+        var child1 = new Person { Id = Guid.NewGuid(), ClanId = ClanId, FullName = "Minh Mạng", Generation = 2, Path = "/r/c1/" };
+        var child2 = new Person { Id = Guid.NewGuid(), ClanId = ClanId, FullName = "Khác", Generation = 2, Path = "/r/c2/" };
+
+        var link1 = new ParentChild { ParentId = root.Id, ChildId = child1.Id, RelationType = RelationType.Biological, SiblingOrder = 1 };
+        var link2 = new ParentChild { ParentId = root.Id, ChildId = child2.Id, RelationType = RelationType.Biological, SiblingOrder = 2 };
+
+        var personRepository = new Mock<IPersonRepository>();
+        personRepository
+            .Setup(x => x.GetByClanAsync(ClanId, false, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new[] { root, child1, child2 });
+
+        var parentChildRepository = new Mock<IParentChildRepository>();
+        parentChildRepository
+            .Setup(x => x.GetByParentIdsAsync(It.IsAny<IReadOnlyCollection<Guid>>(), RelationType.Biological, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new[] { link1, link2 });
+
+        var repositoryManager = new Mock<IRepositoryManager>();
+        repositoryManager.SetupGet(x => x.Person).Returns(personRepository.Object);
+        repositoryManager.SetupGet(x => x.ParentChild).Returns(parentChildRepository.Object);
+
+        var service = new PersonService(repositoryManager.Object, Mock.Of<ILoggerManager>());
+
+        var tree = await service.GetTreeAsync(ClanId);
+
+        Assert.NotNull(tree);
+        Assert.Equal("Gia Long", tree!.Person.FullName);
+        Assert.Equal(2, tree.Children.Count);
+        Assert.Equal("Minh Mạng", tree.Children[0].Person.FullName);
+        Assert.Equal("Khác", tree.Children[1].Person.FullName);
+    }
+
+    [Fact]
+    public async Task GetAncestorsAsync_ReturnsAncestorsInOrder()
+    {
+        var a = Guid.NewGuid();
+        var b = Guid.NewGuid();
+        var c = Guid.NewGuid();
+
+        var person = new Person { Id = c, ClanId = ClanId, FullName = "C", Path = $"/{a}/{b}/{c}/" };
+        var ancestorA = new Person { Id = a, ClanId = ClanId, FullName = "A", Path = $"/{a}/" };
+        var ancestorB = new Person { Id = b, ClanId = ClanId, FullName = "B", Path = $"/{a}/{b}/" };
+
+        var personRepository = new Mock<IPersonRepository>();
+        personRepository.Setup(x => x.GetByIdAsync(c, false, It.IsAny<CancellationToken>())).ReturnsAsync(person);
+        personRepository
+            .Setup(x => x.GetByIdsAsync(It.IsAny<IReadOnlyCollection<Guid>>(), false, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new[] { ancestorA, ancestorB });
+
+        var repositoryManager = new Mock<IRepositoryManager>();
+        repositoryManager.SetupGet(x => x.Person).Returns(personRepository.Object);
+
+        var service = new PersonService(repositoryManager.Object, Mock.Of<ILoggerManager>());
+
+        var result = await service.GetAncestorsAsync(ClanId, c);
+
+        Assert.Equal(2, result.Count);
+        Assert.Equal("A", result[0].FullName);
+        Assert.Equal("B", result[1].FullName);
+    }
 }

@@ -34,5 +34,7 @@ public sealed class Person : BaseEntity
 
     public PrivacyLevel PrivacyLevel { get; set; } = PrivacyLevel.Public;
 
+    public string? PortraitUrl { get; set; }
+
     public int Version { get; set; } = 1;
 }

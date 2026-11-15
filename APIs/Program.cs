@@ -59,6 +59,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseExceptionHandler();
+app.UseStaticFiles();
 app.UseCors("Frontend");
 app.UseAuthorization();
 

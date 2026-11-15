@@ -6,6 +6,10 @@ public sealed record PersonDto(
     Guid Id,
     Guid ClanId,
     string FullName,
+    string? HuyName,
     Gender Gender,
+    FlexibleDateDto? BirthDate,
+    FlexibleDateDto? DeathDate,
     int Generation,
-    string Path);
+    string Path,
+    string? PortraitUrl);

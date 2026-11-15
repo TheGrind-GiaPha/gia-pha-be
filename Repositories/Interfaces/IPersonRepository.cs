@@ -8,4 +8,19 @@ public interface IPersonRepository : IRepositoryBase<Person>
         Guid id,
         bool trackChanges,
         CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<Person>> GetByClanAsync(
+        Guid clanId,
+        bool trackChanges,
+        CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<Person>> GetByPathPrefixAsync(
+        string pathPrefix,
+        bool trackChanges,
+        CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<Person>> GetByIdsAsync(
+        IReadOnlyCollection<Guid> ids,
+        bool trackChanges,
+        CancellationToken cancellationToken = default);
 }
