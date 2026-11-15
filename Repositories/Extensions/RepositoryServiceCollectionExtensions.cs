@@ -9,6 +9,9 @@ public static class RepositoryServiceCollectionExtensions
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<IClanRepository, ClanRepository>();
+        services.AddScoped<IPersonRepository, PersonRepository>();
+        services.AddScoped<IParentChildRepository, ParentChildRepository>();
+        services.AddScoped<IUnionRepository, UnionRepository>();
         services.AddScoped<IRepositoryManager, RepositoryManager>();
         return services;
     }

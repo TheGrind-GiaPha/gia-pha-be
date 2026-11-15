@@ -9,13 +9,25 @@ public sealed class RepositoryManager : IRepositoryManager
 
     public RepositoryManager(
         GiaPhaDbContext context,
-        IClanRepository clanRepository)
+        IClanRepository clanRepository,
+        IPersonRepository personRepository,
+        IParentChildRepository parentChildRepository,
+        IUnionRepository unionRepository)
     {
         _context = context;
         Clan = clanRepository;
+        Person = personRepository;
+        ParentChild = parentChildRepository;
+        Union = unionRepository;
     }
 
     public IClanRepository Clan { get; }
+
+    public IPersonRepository Person { get; }
+
+    public IParentChildRepository ParentChild { get; }
+
+    public IUnionRepository Union { get; }
 
     public Task<int> SaveAsync(CancellationToken cancellationToken = default)
         => _context.SaveChangesAsync(cancellationToken);

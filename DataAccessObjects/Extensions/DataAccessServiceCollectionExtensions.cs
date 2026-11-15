@@ -1,5 +1,6 @@
 using GiaPha.DataAccessObjects.Context;
 using GiaPha.DataAccessObjects.DAOs;
+using GiaPha.DataAccessObjects.Seed;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +24,7 @@ public static class DataAccessServiceCollectionExtensions
 
         services.AddScoped(typeof(IGenericDao<>), typeof(GenericDao<>));
         services.AddScoped<IClanDao, ClanDao>();
+        services.AddScoped<GenealogySeeder>();
 
         return services;
     }

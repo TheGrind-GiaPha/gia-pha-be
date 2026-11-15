@@ -1,13 +1,19 @@
 namespace GiaPha.BusinessObjects.Entities;
 
 /// <summary>
-/// Entity mẫu để chứng minh luồng 3-layer + Repository + DAO.
-/// Khi chốt ERD, Clan sẽ được bổ sung các trường: OriginStory, Rules,
-/// AncestralHall, PrivacyLevel, Status, RootPersonId...
+/// Dòng họ: không gian làm việc riêng biệt của từng dòng họ.
 /// </summary>
 public sealed class Clan : BaseEntity
 {
     public string Name { get; set; } = string.Empty;
 
     public string? Description { get; set; }
+
+    public string? OriginStory { get; set; }
+
+    public string? Rules { get; set; }
+
+    public ClanStatus Status { get; set; } = ClanStatus.Draft;
+
+    public DateTime? PublishedAt { get; set; }
 }

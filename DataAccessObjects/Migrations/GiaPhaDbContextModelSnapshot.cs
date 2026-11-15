@@ -22,6 +22,38 @@ namespace GiaPha.DataAccessObjects.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("GiaPha.BusinessObjects.Entities.Branch", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ClanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("FounderPersonId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClanId");
+
+                    b.HasIndex("FounderPersonId");
+
+                    b.ToTable("Branches", (string)null);
+                });
+
             modelBuilder.Entity("GiaPha.BusinessObjects.Entities.Clan", b =>
                 {
                     b.Property<Guid>("Id")
@@ -40,6 +72,22 @@ namespace GiaPha.DataAccessObjects.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<string>("OriginStory")
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<DateTime?>("PublishedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Rules")
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<int>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -56,15 +104,269 @@ namespace GiaPha.DataAccessObjects.Migrations
                             Id = new Guid("11111111-1111-1111-1111-111111111111"),
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Dữ liệu mẫu phục vụ kiểm thử luồng API và giao diện.",
-                            Name = "Gia phả họ Nguyễn Hữu"
+                            Name = "Gia phả họ Nguyễn Hữu",
+                            Status = 0
                         },
                         new
                         {
                             Id = new Guid("22222222-2222-2222-2222-222222222222"),
                             CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "Dữ liệu mẫu phục vụ kiểm thử luồng API và giao diện.",
-                            Name = "Gia phả họ Trần"
+                            Name = "Gia phả họ Trần",
+                            Status = 0
                         });
+                });
+
+            modelBuilder.Entity("GiaPha.BusinessObjects.Entities.ParentChild", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ChildId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ParentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("RelationType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SiblingOrder")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChildId");
+
+                    b.HasIndex("ParentId", "ChildId")
+                        .IsUnique();
+
+                    b.ToTable("ParentChild", (string)null);
+                });
+
+            modelBuilder.Entity("GiaPha.BusinessObjects.Entities.Person", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("BranchId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ClanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Generation")
+                        .HasColumnType("int");
+
+                    b.Property<string>("HuyName")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<bool>("IsLiving")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("PrivacyLevel")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ThuyName")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("TuName")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("ClanId");
+
+                    b.HasIndex("Path");
+
+                    b.ToTable("Persons", (string)null);
+                });
+
+            modelBuilder.Entity("GiaPha.BusinessObjects.Entities.Union", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("HusbandId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Rank")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("WifeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WifeId");
+
+                    b.HasIndex("HusbandId", "WifeId")
+                        .IsUnique();
+
+                    b.ToTable("Unions", (string)null);
+                });
+
+            modelBuilder.Entity("GiaPha.BusinessObjects.Entities.Branch", b =>
+                {
+                    b.HasOne("GiaPha.BusinessObjects.Entities.Clan", null)
+                        .WithMany()
+                        .HasForeignKey("ClanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GiaPha.BusinessObjects.Entities.Person", null)
+                        .WithMany()
+                        .HasForeignKey("FounderPersonId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("GiaPha.BusinessObjects.Entities.ParentChild", b =>
+                {
+                    b.HasOne("GiaPha.BusinessObjects.Entities.Person", null)
+                        .WithMany()
+                        .HasForeignKey("ChildId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("GiaPha.BusinessObjects.Entities.Person", null)
+                        .WithMany()
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GiaPha.BusinessObjects.Entities.Person", b =>
+                {
+                    b.HasOne("GiaPha.BusinessObjects.Entities.Branch", null)
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("GiaPha.BusinessObjects.Entities.Clan", null)
+                        .WithMany()
+                        .HasForeignKey("ClanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("GiaPha.BusinessObjects.Entities.FlexibleDate", "BirthDate", b1 =>
+                        {
+                            b1.Property<Guid>("PersonId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<int>("Calendar")
+                                .HasColumnType("int");
+
+                            b1.Property<int?>("Day")
+                                .HasColumnType("int");
+
+                            b1.Property<bool>("IsLeapMonth")
+                                .HasColumnType("bit");
+
+                            b1.Property<int?>("Month")
+                                .HasColumnType("int");
+
+                            b1.Property<int?>("Year")
+                                .HasColumnType("int");
+
+                            b1.HasKey("PersonId");
+
+                            b1.ToTable("Persons");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PersonId");
+                        });
+
+                    b.OwnsOne("GiaPha.BusinessObjects.Entities.FlexibleDate", "DeathDate", b1 =>
+                        {
+                            b1.Property<Guid>("PersonId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<int>("Calendar")
+                                .HasColumnType("int");
+
+                            b1.Property<int?>("Day")
+                                .HasColumnType("int");
+
+                            b1.Property<bool>("IsLeapMonth")
+                                .HasColumnType("bit");
+
+                            b1.Property<int?>("Month")
+                                .HasColumnType("int");
+
+                            b1.Property<int?>("Year")
+                                .HasColumnType("int");
+
+                            b1.HasKey("PersonId");
+
+                            b1.ToTable("Persons");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PersonId");
+                        });
+
+                    b.Navigation("BirthDate");
+
+                    b.Navigation("DeathDate");
+                });
+
+            modelBuilder.Entity("GiaPha.BusinessObjects.Entities.Union", b =>
+                {
+                    b.HasOne("GiaPha.BusinessObjects.Entities.Person", null)
+                        .WithMany()
+                        .HasForeignKey("HusbandId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("GiaPha.BusinessObjects.Entities.Person", null)
+                        .WithMany()
+                        .HasForeignKey("WifeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

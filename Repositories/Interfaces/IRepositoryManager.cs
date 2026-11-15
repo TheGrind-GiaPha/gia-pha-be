@@ -8,5 +8,11 @@ public interface IRepositoryManager
 {
     IClanRepository Clan { get; }
 
+    IPersonRepository Person { get; }
+
+    IParentChildRepository ParentChild { get; }
+
+    IUnionRepository Union { get; }
+
     Task<int> SaveAsync(CancellationToken cancellationToken = default);
 }

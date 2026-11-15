@@ -12,6 +12,14 @@ public sealed class GiaPhaDbContext : DbContext
 
     public DbSet<Clan> Clans => Set<Clan>();
 
+    public DbSet<Branch> Branches => Set<Branch>();
+
+    public DbSet<Person> Persons => Set<Person>();
+
+    public DbSet<ParentChild> ParentChild => Set<ParentChild>();
+
+    public DbSet<Union> Unions => Set<Union>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Mọi configuration nằm trong DataAccessObjects/Configurations.

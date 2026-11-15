@@ -19,6 +19,18 @@ public sealed class ClanConfiguration : IEntityTypeConfiguration<Clan>
         builder.Property(x => x.Description)
             .HasMaxLength(2000);
 
+        builder.Property(x => x.OriginStory)
+            .HasMaxLength(4000);
+
+        builder.Property(x => x.Rules)
+            .HasMaxLength(4000);
+
+        builder.Property(x => x.Status)
+            .IsRequired()
+            .HasDefaultValue(ClanStatus.Draft);
+
+        builder.Property(x => x.PublishedAt);
+
         builder.Property(x => x.CreatedAt)
             .IsRequired();
 
@@ -33,6 +45,7 @@ public sealed class ClanConfiguration : IEntityTypeConfiguration<Clan>
                 Id = Guid.Parse("11111111-1111-1111-1111-111111111111"),
                 Name = "Gia phả họ Nguyễn Hữu",
                 Description = "Dữ liệu mẫu phục vụ kiểm thử luồng API và giao diện.",
+                Status = ClanStatus.Draft,
                 CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc)
             },
             new Clan
@@ -40,6 +53,7 @@ public sealed class ClanConfiguration : IEntityTypeConfiguration<Clan>
                 Id = Guid.Parse("22222222-2222-2222-2222-222222222222"),
                 Name = "Gia phả họ Trần",
                 Description = "Dữ liệu mẫu phục vụ kiểm thử luồng API và giao diện.",
+                Status = ClanStatus.Draft,
                 CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc)
             });
     }

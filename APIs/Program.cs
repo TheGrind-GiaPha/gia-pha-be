@@ -1,6 +1,7 @@
 using GiaPha.APIs.Middleware;
 using GiaPha.DataAccessObjects.Context;
 using GiaPha.DataAccessObjects.Extensions;
+using GiaPha.DataAccessObjects.Seed;
 using GiaPha.Repositories.Extensions;
 using GiaPha.Services.Extensions;
 
@@ -63,6 +64,24 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapHealthChecks("/health");
+
+// Seed dữ liệu mẫu (gia phả nhà Nguyễn) khi database còn trống.
+using (var scope = app.Services.CreateScope())
+{
+    try
+    {
+        var seeder = scope.ServiceProvider.GetRequiredService<GenealogySeeder>();
+        var seeded = await seeder.SeedAsync();
+        if (seeded > 0)
+        {
+            app.Logger.LogInformation("Đã seed {Count} người cho gia phả nhà Nguyễn.", seeded);
+        }
+    }
+    catch (Exception ex)
+    {
+        app.Logger.LogWarning(ex, "Không thể seed dữ liệu mẫu. Kiểm tra kết nối database.");
+    }
+}
 
 app.Run();
 
