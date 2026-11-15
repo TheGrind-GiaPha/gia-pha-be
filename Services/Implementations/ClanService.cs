@@ -81,6 +81,8 @@ public sealed class ClanService : IClanService
             return null;
         }
 
+        EnsureDraft(clan);
+
         var name = NormalizeName(request.Name);
         var isNameChanged = !string.Equals(clan.Name, name, StringComparison.OrdinalIgnoreCase);
 
@@ -100,6 +102,36 @@ public sealed class ClanService : IClanService
         return Map(clan);
     }
 
+    public async Task<ClanDto?> PublishAsync(
+        Guid id,
+        CancellationToken cancellationToken = default)
+    {
+        var clan = await _repository.Clan.GetByIdAsync(
+            id,
+            trackChanges: true,
+            cancellationToken);
+
+        if (clan is null)
+        {
+            return null;
+        }
+
+        if (clan.Status == ClanStatus.Published)
+        {
+            throw new ConflictException("Dòng họ đã được công bố.");
+        }
+
+        clan.Status = ClanStatus.Published;
+        clan.PublishedAt = DateTime.UtcNow;
+        clan.UpdatedAt = DateTime.UtcNow;
+
+        _repository.Clan.Update(clan);
+        await _repository.SaveAsync(cancellationToken);
+
+        _logger.LogInfo($"Đã công bố dòng họ {clan.Id} ('{clan.Name}').");
+        return Map(clan);
+    }
+
     public async Task<bool> DeleteAsync(
         Guid id,
         CancellationToken cancellationToken = default)
@@ -113,6 +145,8 @@ public sealed class ClanService : IClanService
         {
             return false;
         }
+
+        EnsureDraft(clan);
 
         _repository.Clan.Delete(clan);
         await _repository.SaveAsync(cancellationToken);
@@ -136,6 +170,22 @@ public sealed class ClanService : IClanService
     private static string? NormalizeDescription(string? description)
         => string.IsNullOrWhiteSpace(description) ? null : description.Trim();
 
+    private static void EnsureDraft(Clan clan)
+    {
+        if (clan.Status == ClanStatus.Published)
+        {
+            throw new RequiresChangeRequestException(
+                "Dòng họ đã được công bố. Mọi thay đổi phải gửi đề xuất để duyệt.");
+        }
+    }
+
     private static ClanDto Map(Clan clan)
-        => new(clan.Id, clan.Name, clan.Description, clan.CreatedAt, clan.UpdatedAt);
+        => new(
+            clan.Id,
+            clan.Name,
+            clan.Description,
+            clan.Status,
+            clan.PublishedAt,
+            clan.CreatedAt,
+            clan.UpdatedAt);
 }

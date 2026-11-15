@@ -22,13 +22,32 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
         Exception exception,
         CancellationToken cancellationToken)
     {
-        var (statusCode, title) = exception switch
+        var (statusCode, code, message) = exception switch
         {
-            ConflictException => (StatusCodes.Status409Conflict, "Xung đột dữ liệu"),
-            NotFoundException => (StatusCodes.Status404NotFound, "Không tìm thấy"),
-            ArgumentException => (StatusCodes.Status400BadRequest, "Dữ liệu không hợp lệ"),
-            DbUpdateException => (StatusCodes.Status409Conflict, "Không thể lưu dữ liệu"),
-            _ => (StatusCodes.Status500InternalServerError, "Lỗi hệ thống")
+            RequiresChangeRequestException ex => (
+                StatusCodes.Status409Conflict,
+                ex.Code,
+                ex.Message),
+            ConflictException ex => (
+                StatusCodes.Status409Conflict,
+                ApiErrorCodes.Conflict,
+                ex.Message),
+            NotFoundException ex => (
+                StatusCodes.Status404NotFound,
+                ApiErrorCodes.NotFound,
+                ex.Message),
+            ArgumentException ex => (
+                StatusCodes.Status400BadRequest,
+                ApiErrorCodes.Validation,
+                ex.Message),
+            DbUpdateException => (
+                StatusCodes.Status409Conflict,
+                ApiErrorCodes.DbUpdate,
+                "Không thể lưu dữ liệu."),
+            _ => (
+                StatusCodes.Status500InternalServerError,
+                ApiErrorCodes.Internal,
+                "Lỗi hệ thống.")
         };
 
         if (statusCode == StatusCodes.Status500InternalServerError)
@@ -41,13 +60,11 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
         }
 
         httpContext.Response.StatusCode = statusCode;
+        httpContext.Response.ContentType = "application/json";
 
-        await Results.Problem(
-                title: title,
-                detail: exception.Message,
-                statusCode: statusCode,
-                instance: httpContext.Request.Path)
-            .ExecuteAsync(httpContext);
+        await httpContext.Response.WriteAsJsonAsync(
+            new { code, message },
+            cancellationToken);
 
         return true;
     }

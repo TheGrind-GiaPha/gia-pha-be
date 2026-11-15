@@ -63,6 +63,19 @@ public sealed class ClansController : ControllerBase
         return clan is null ? NotFound() : Ok(clan);
     }
 
+    /// <summary>Công bố dòng họ. Sau khi công bố, mọi ghi trực tiếp bị chặn.</summary>
+    [HttpPost("{id:guid}/publish")]
+    [ProducesResponseType(typeof(ClanDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    public async Task<ActionResult<ClanDto>> Publish(
+        Guid id,
+        CancellationToken cancellationToken)
+    {
+        var clan = await _clanService.PublishAsync(id, cancellationToken);
+        return clan is null ? NotFound() : Ok(clan);
+    }
+
     /// <summary>Xóa dòng họ.</summary>
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
