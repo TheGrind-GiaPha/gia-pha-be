@@ -29,4 +29,5 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+<ItemGroup><EmbeddedResource Include="Data/KinshipTerms.json" /></ItemGroup>
 </Project>

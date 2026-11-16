@@ -13,6 +13,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<PrivacyFilterService>();
         services.AddScoped<PersonProfileService>();
         services.AddScoped<AnniversaryService>();
+        services.AddSingleton<KinshipResolver>();
+        services.AddScoped<KinshipService>();
         services.AddSingleton<ILunarConverter, LunarConverter>();
         services.AddSingleton<IAnniversaryCalculator, AnniversaryCalculator>();
 

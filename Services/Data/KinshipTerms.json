@@ -1,0 +1,889 @@
+{
+  "0-0-true-true-true": {
+    "name": "Bản thân",
+    "regionalAliases": []
+  },
+  "0-0-true-true-false": {
+    "name": "Bản thân",
+    "regionalAliases": []
+  },
+  "0-0-true-false-true": {
+    "name": "Bản thân",
+    "regionalAliases": []
+  },
+  "0-0-true-false-false": {
+    "name": "Bản thân",
+    "regionalAliases": []
+  },
+  "0-0-false-true-true": {
+    "name": "Bản thân",
+    "regionalAliases": []
+  },
+  "0-0-false-true-false": {
+    "name": "Bản thân",
+    "regionalAliases": []
+  },
+  "0-0-false-false-true": {
+    "name": "Bản thân",
+    "regionalAliases": []
+  },
+  "0-0-false-false-false": {
+    "name": "Bản thân",
+    "regionalAliases": []
+  },
+  "0-1-true-true-true": {
+    "name": "Con rể",
+    "regionalAliases": []
+  },
+  "0-1-true-true-false": {
+    "name": "Con trai",
+    "regionalAliases": []
+  },
+  "0-1-true-false-true": {
+    "name": "Con dâu",
+    "regionalAliases": []
+  },
+  "0-1-true-false-false": {
+    "name": "Con gái",
+    "regionalAliases": []
+  },
+  "0-1-false-true-true": {
+    "name": "Con rể",
+    "regionalAliases": []
+  },
+  "0-1-false-true-false": {
+    "name": "Con trai",
+    "regionalAliases": []
+  },
+  "0-1-false-false-true": {
+    "name": "Con dâu",
+    "regionalAliases": []
+  },
+  "0-1-false-false-false": {
+    "name": "Con gái",
+    "regionalAliases": []
+  },
+  "0-2-true-true-true": {
+    "name": "Cháu rể",
+    "regionalAliases": []
+  },
+  "0-2-true-true-false": {
+    "name": "Cháu nội",
+    "regionalAliases": []
+  },
+  "0-2-true-false-true": {
+    "name": "Cháu dâu",
+    "regionalAliases": []
+  },
+  "0-2-true-false-false": {
+    "name": "Cháu nội",
+    "regionalAliases": []
+  },
+  "0-2-false-true-true": {
+    "name": "Cháu rể",
+    "regionalAliases": []
+  },
+  "0-2-false-true-false": {
+    "name": "Cháu nội",
+    "regionalAliases": []
+  },
+  "0-2-false-false-true": {
+    "name": "Cháu dâu",
+    "regionalAliases": []
+  },
+  "0-2-false-false-false": {
+    "name": "Cháu nội",
+    "regionalAliases": []
+  },
+  "0-3-true-true-true": {
+    "name": "Chắt nội",
+    "regionalAliases": []
+  },
+  "0-3-true-true-false": {
+    "name": "Chắt nội",
+    "regionalAliases": []
+  },
+  "0-3-true-false-true": {
+    "name": "Chắt nội",
+    "regionalAliases": []
+  },
+  "0-3-true-false-false": {
+    "name": "Chắt nội",
+    "regionalAliases": []
+  },
+  "0-3-false-true-true": {
+    "name": "Chắt nội",
+    "regionalAliases": []
+  },
+  "0-3-false-true-false": {
+    "name": "Chắt nội",
+    "regionalAliases": []
+  },
+  "0-3-false-false-true": {
+    "name": "Chắt nội",
+    "regionalAliases": []
+  },
+  "0-3-false-false-false": {
+    "name": "Chắt nội",
+    "regionalAliases": []
+  },
+  "0-4-true-true-true": {
+    "name": "Chít nội",
+    "regionalAliases": []
+  },
+  "0-4-true-true-false": {
+    "name": "Chít nội",
+    "regionalAliases": []
+  },
+  "0-4-true-false-true": {
+    "name": "Chít nội",
+    "regionalAliases": []
+  },
+  "0-4-true-false-false": {
+    "name": "Chít nội",
+    "regionalAliases": []
+  },
+  "0-4-false-true-true": {
+    "name": "Chít nội",
+    "regionalAliases": []
+  },
+  "0-4-false-true-false": {
+    "name": "Chít nội",
+    "regionalAliases": []
+  },
+  "0-4-false-false-true": {
+    "name": "Chít nội",
+    "regionalAliases": []
+  },
+  "0-4-false-false-false": {
+    "name": "Chít nội",
+    "regionalAliases": []
+  },
+  "1-0-true-true-true": {
+    "name": "Cha",
+    "regionalAliases": [
+      "Ba / Thầy"
+    ]
+  },
+  "1-0-true-true-false": {
+    "name": "Cha",
+    "regionalAliases": [
+      "Ba / Thầy"
+    ]
+  },
+  "1-0-true-false-true": {
+    "name": "Mẹ",
+    "regionalAliases": [
+      "Mạ / Mẹ"
+    ]
+  },
+  "1-0-true-false-false": {
+    "name": "Mẹ",
+    "regionalAliases": [
+      "Mạ / Mẹ"
+    ]
+  },
+  "1-0-false-true-true": {
+    "name": "Cha",
+    "regionalAliases": [
+      "Ba / Thầy"
+    ]
+  },
+  "1-0-false-true-false": {
+    "name": "Cha",
+    "regionalAliases": [
+      "Ba / Thầy"
+    ]
+  },
+  "1-0-false-false-true": {
+    "name": "Mẹ",
+    "regionalAliases": [
+      "Mạ / Mẹ"
+    ]
+  },
+  "1-0-false-false-false": {
+    "name": "Mẹ",
+    "regionalAliases": [
+      "Mạ / Mẹ"
+    ]
+  },
+  "1-1-true-true-true": {
+    "name": "Anh rể",
+    "regionalAliases": []
+  },
+  "1-1-true-true-false": {
+    "name": "Anh ruột",
+    "regionalAliases": []
+  },
+  "1-1-true-false-true": {
+    "name": "Chị dâu",
+    "regionalAliases": []
+  },
+  "1-1-true-false-false": {
+    "name": "Chị ruột",
+    "regionalAliases": []
+  },
+  "1-1-false-true-true": {
+    "name": "Em rể",
+    "regionalAliases": []
+  },
+  "1-1-false-true-false": {
+    "name": "Em trai ruột",
+    "regionalAliases": []
+  },
+  "1-1-false-false-true": {
+    "name": "Em dâu",
+    "regionalAliases": []
+  },
+  "1-1-false-false-false": {
+    "name": "Em gái ruột",
+    "regionalAliases": []
+  },
+  "1-2-true-true-true": {
+    "name": "Cháu (con của anh)",
+    "regionalAliases": []
+  },
+  "1-2-true-true-false": {
+    "name": "Cháu (con của anh)",
+    "regionalAliases": []
+  },
+  "1-2-true-false-true": {
+    "name": "Cháu (con của anh)",
+    "regionalAliases": []
+  },
+  "1-2-true-false-false": {
+    "name": "Cháu (con của anh)",
+    "regionalAliases": []
+  },
+  "1-2-false-true-true": {
+    "name": "Cháu (con của em)",
+    "regionalAliases": []
+  },
+  "1-2-false-true-false": {
+    "name": "Cháu (con của em)",
+    "regionalAliases": []
+  },
+  "1-2-false-false-true": {
+    "name": "Cháu (con của em)",
+    "regionalAliases": []
+  },
+  "1-2-false-false-false": {
+    "name": "Cháu (con của em)",
+    "regionalAliases": []
+  },
+  "1-3-true-true-true": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "1-3-true-true-false": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "1-3-true-false-true": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "1-3-true-false-false": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "1-3-false-true-true": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "1-3-false-true-false": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "1-3-false-false-true": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "1-3-false-false-false": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "1-4-true-true-true": {
+    "name": "Chắt họ",
+    "regionalAliases": []
+  },
+  "1-4-true-true-false": {
+    "name": "Chắt họ",
+    "regionalAliases": []
+  },
+  "1-4-true-false-true": {
+    "name": "Chắt họ",
+    "regionalAliases": []
+  },
+  "1-4-true-false-false": {
+    "name": "Chắt họ",
+    "regionalAliases": []
+  },
+  "1-4-false-true-true": {
+    "name": "Chắt họ",
+    "regionalAliases": []
+  },
+  "1-4-false-true-false": {
+    "name": "Chắt họ",
+    "regionalAliases": []
+  },
+  "1-4-false-false-true": {
+    "name": "Chắt họ",
+    "regionalAliases": []
+  },
+  "1-4-false-false-false": {
+    "name": "Chắt họ",
+    "regionalAliases": []
+  },
+  "2-0-true-true-true": {
+    "name": "Ông nội",
+    "regionalAliases": [
+      "Nội"
+    ]
+  },
+  "2-0-true-true-false": {
+    "name": "Ông nội",
+    "regionalAliases": [
+      "Nội"
+    ]
+  },
+  "2-0-true-false-true": {
+    "name": "Bà nội",
+    "regionalAliases": [
+      "Nội"
+    ]
+  },
+  "2-0-true-false-false": {
+    "name": "Bà nội",
+    "regionalAliases": [
+      "Nội"
+    ]
+  },
+  "2-0-false-true-true": {
+    "name": "Ông nội",
+    "regionalAliases": [
+      "Nội"
+    ]
+  },
+  "2-0-false-true-false": {
+    "name": "Ông nội",
+    "regionalAliases": [
+      "Nội"
+    ]
+  },
+  "2-0-false-false-true": {
+    "name": "Bà nội",
+    "regionalAliases": [
+      "Nội"
+    ]
+  },
+  "2-0-false-false-false": {
+    "name": "Bà nội",
+    "regionalAliases": [
+      "Nội"
+    ]
+  },
+  "2-1-true-true-true": {
+    "name": "Bác rể (chồng của bác)",
+    "regionalAliases": []
+  },
+  "2-1-true-true-false": {
+    "name": "Bác (anh của cha)",
+    "regionalAliases": []
+  },
+  "2-1-true-false-true": {
+    "name": "Bác gái (vợ của bác)",
+    "regionalAliases": [
+      "Bác gái"
+    ]
+  },
+  "2-1-true-false-false": {
+    "name": "Bác (chị của cha)",
+    "regionalAliases": [
+      "O (chị của cha)",
+      "Bác"
+    ]
+  },
+  "2-1-false-true-true": {
+    "name": "Dượng (chồng của cô)",
+    "regionalAliases": []
+  },
+  "2-1-false-true-false": {
+    "name": "Chú ruột",
+    "regionalAliases": []
+  },
+  "2-1-false-false-true": {
+    "name": "Thím (vợ của chú)",
+    "regionalAliases": []
+  },
+  "2-1-false-false-false": {
+    "name": "Cô ruột",
+    "regionalAliases": [
+      "O ruột (Cô)"
+    ]
+  },
+  "2-2-true-true-true": {
+    "name": "Anh họ (con bác)",
+    "regionalAliases": []
+  },
+  "2-2-true-true-false": {
+    "name": "Anh họ (con bác)",
+    "regionalAliases": []
+  },
+  "2-2-true-false-true": {
+    "name": "Chị họ (con bác)",
+    "regionalAliases": []
+  },
+  "2-2-true-false-false": {
+    "name": "Chị họ (con bác)",
+    "regionalAliases": []
+  },
+  "2-2-false-true-true": {
+    "name": "Em trai họ (con chú)",
+    "regionalAliases": []
+  },
+  "2-2-false-true-false": {
+    "name": "Em trai họ (con chú)",
+    "regionalAliases": []
+  },
+  "2-2-false-false-true": {
+    "name": "Em gái họ (con chú)",
+    "regionalAliases": []
+  },
+  "2-2-false-false-false": {
+    "name": "Em gái họ (con chú)",
+    "regionalAliases": []
+  },
+  "2-3-true-true-true": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "2-3-true-true-false": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "2-3-true-false-true": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "2-3-true-false-false": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "2-3-false-true-true": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "2-3-false-true-false": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "2-3-false-false-true": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "2-3-false-false-false": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "2-4-true-true-true": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "2-4-true-true-false": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "2-4-true-false-true": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "2-4-true-false-false": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "2-4-false-true-true": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "2-4-false-true-false": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "2-4-false-false-true": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "2-4-false-false-false": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "3-0-true-true-true": {
+    "name": "Cụ nội",
+    "regionalAliases": [
+      "Ông cố"
+    ]
+  },
+  "3-0-true-true-false": {
+    "name": "Cụ nội",
+    "regionalAliases": [
+      "Ông cố"
+    ]
+  },
+  "3-0-true-false-true": {
+    "name": "Cụ bà",
+    "regionalAliases": [
+      "Bà cố"
+    ]
+  },
+  "3-0-true-false-false": {
+    "name": "Cụ bà",
+    "regionalAliases": [
+      "Bà cố"
+    ]
+  },
+  "3-0-false-true-true": {
+    "name": "Cụ nội",
+    "regionalAliases": [
+      "Ông cố"
+    ]
+  },
+  "3-0-false-true-false": {
+    "name": "Cụ nội",
+    "regionalAliases": [
+      "Ông cố"
+    ]
+  },
+  "3-0-false-false-true": {
+    "name": "Cụ bà",
+    "regionalAliases": [
+      "Bà cố"
+    ]
+  },
+  "3-0-false-false-false": {
+    "name": "Cụ bà",
+    "regionalAliases": [
+      "Bà cố"
+    ]
+  },
+  "3-1-true-true-true": {
+    "name": "Ông bác",
+    "regionalAliases": []
+  },
+  "3-1-true-true-false": {
+    "name": "Ông bác",
+    "regionalAliases": []
+  },
+  "3-1-true-false-true": {
+    "name": "Bà bác",
+    "regionalAliases": []
+  },
+  "3-1-true-false-false": {
+    "name": "Bà bác",
+    "regionalAliases": []
+  },
+  "3-1-false-true-true": {
+    "name": "Ông chú",
+    "regionalAliases": []
+  },
+  "3-1-false-true-false": {
+    "name": "Ông chú",
+    "regionalAliases": []
+  },
+  "3-1-false-false-true": {
+    "name": "Bà cô",
+    "regionalAliases": [
+      "Bà o"
+    ]
+  },
+  "3-1-false-false-false": {
+    "name": "Bà cô",
+    "regionalAliases": [
+      "Bà o"
+    ]
+  },
+  "3-2-true-true-true": {
+    "name": "Bác họ",
+    "regionalAliases": []
+  },
+  "3-2-true-true-false": {
+    "name": "Bác họ",
+    "regionalAliases": []
+  },
+  "3-2-true-false-true": {
+    "name": "Bác họ",
+    "regionalAliases": []
+  },
+  "3-2-true-false-false": {
+    "name": "Bác họ",
+    "regionalAliases": []
+  },
+  "3-2-false-true-true": {
+    "name": "Chú họ",
+    "regionalAliases": []
+  },
+  "3-2-false-true-false": {
+    "name": "Chú họ",
+    "regionalAliases": []
+  },
+  "3-2-false-false-true": {
+    "name": "Cô họ",
+    "regionalAliases": [
+      "O họ"
+    ]
+  },
+  "3-2-false-false-false": {
+    "name": "Cô họ",
+    "regionalAliases": [
+      "O họ"
+    ]
+  },
+  "3-3-true-true-true": {
+    "name": "Anh họ",
+    "regionalAliases": []
+  },
+  "3-3-true-true-false": {
+    "name": "Anh họ",
+    "regionalAliases": []
+  },
+  "3-3-true-false-true": {
+    "name": "Chị họ",
+    "regionalAliases": []
+  },
+  "3-3-true-false-false": {
+    "name": "Chị họ",
+    "regionalAliases": []
+  },
+  "3-3-false-true-true": {
+    "name": "Em trai họ",
+    "regionalAliases": []
+  },
+  "3-3-false-true-false": {
+    "name": "Em trai họ",
+    "regionalAliases": []
+  },
+  "3-3-false-false-true": {
+    "name": "Em gái họ",
+    "regionalAliases": []
+  },
+  "3-3-false-false-false": {
+    "name": "Em gái họ",
+    "regionalAliases": []
+  },
+  "3-4-true-true-true": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "3-4-true-true-false": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "3-4-true-false-true": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "3-4-true-false-false": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "3-4-false-true-true": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "3-4-false-true-false": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "3-4-false-false-true": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "3-4-false-false-false": {
+    "name": "Cháu họ",
+    "regionalAliases": []
+  },
+  "4-0-true-true-true": {
+    "name": "Kỵ nội",
+    "regionalAliases": [
+      "Ông sơ"
+    ]
+  },
+  "4-0-true-true-false": {
+    "name": "Kỵ nội",
+    "regionalAliases": [
+      "Ông sơ"
+    ]
+  },
+  "4-0-true-false-true": {
+    "name": "Kỵ bà",
+    "regionalAliases": [
+      "Bà sơ"
+    ]
+  },
+  "4-0-true-false-false": {
+    "name": "Kỵ bà",
+    "regionalAliases": [
+      "Bà sơ"
+    ]
+  },
+  "4-0-false-true-true": {
+    "name": "Kỵ nội",
+    "regionalAliases": [
+      "Ông sơ"
+    ]
+  },
+  "4-0-false-true-false": {
+    "name": "Kỵ nội",
+    "regionalAliases": [
+      "Ông sơ"
+    ]
+  },
+  "4-0-false-false-true": {
+    "name": "Kỵ bà",
+    "regionalAliases": [
+      "Bà sơ"
+    ]
+  },
+  "4-0-false-false-false": {
+    "name": "Kỵ bà",
+    "regionalAliases": [
+      "Bà sơ"
+    ]
+  },
+  "4-1-true-true-true": {
+    "name": "Cụ bác",
+    "regionalAliases": []
+  },
+  "4-1-true-true-false": {
+    "name": "Cụ bác",
+    "regionalAliases": []
+  },
+  "4-1-true-false-true": {
+    "name": "Cụ bác",
+    "regionalAliases": []
+  },
+  "4-1-true-false-false": {
+    "name": "Cụ bác",
+    "regionalAliases": []
+  },
+  "4-1-false-true-true": {
+    "name": "Cụ chú",
+    "regionalAliases": []
+  },
+  "4-1-false-true-false": {
+    "name": "Cụ chú",
+    "regionalAliases": []
+  },
+  "4-1-false-false-true": {
+    "name": "Cụ cô",
+    "regionalAliases": []
+  },
+  "4-1-false-false-false": {
+    "name": "Cụ cô",
+    "regionalAliases": []
+  },
+  "4-2-true-true-true": {
+    "name": "Ông bác họ",
+    "regionalAliases": []
+  },
+  "4-2-true-true-false": {
+    "name": "Ông bác họ",
+    "regionalAliases": []
+  },
+  "4-2-true-false-true": {
+    "name": "Bà bác họ",
+    "regionalAliases": []
+  },
+  "4-2-true-false-false": {
+    "name": "Bà bác họ",
+    "regionalAliases": []
+  },
+  "4-2-false-true-true": {
+    "name": "Ông chú họ",
+    "regionalAliases": []
+  },
+  "4-2-false-true-false": {
+    "name": "Ông chú họ",
+    "regionalAliases": []
+  },
+  "4-2-false-false-true": {
+    "name": "Bà cô họ",
+    "regionalAliases": [
+      "Bà o họ"
+    ]
+  },
+  "4-2-false-false-false": {
+    "name": "Bà cô họ",
+    "regionalAliases": [
+      "Bà o họ"
+    ]
+  },
+  "4-3-true-true-true": {
+    "name": "Bác họ",
+    "regionalAliases": []
+  },
+  "4-3-true-true-false": {
+    "name": "Bác họ",
+    "regionalAliases": []
+  },
+  "4-3-true-false-true": {
+    "name": "Bác họ",
+    "regionalAliases": []
+  },
+  "4-3-true-false-false": {
+    "name": "Bác họ",
+    "regionalAliases": []
+  },
+  "4-3-false-true-true": {
+    "name": "Chú họ",
+    "regionalAliases": []
+  },
+  "4-3-false-true-false": {
+    "name": "Chú họ",
+    "regionalAliases": []
+  },
+  "4-3-false-false-true": {
+    "name": "Cô họ",
+    "regionalAliases": [
+      "O họ"
+    ]
+  },
+  "4-3-false-false-false": {
+    "name": "Cô họ",
+    "regionalAliases": [
+      "O họ"
+    ]
+  },
+  "4-4-true-true-true": {
+    "name": "Anh họ",
+    "regionalAliases": []
+  },
+  "4-4-true-true-false": {
+    "name": "Anh họ",
+    "regionalAliases": []
+  },
+  "4-4-true-false-true": {
+    "name": "Chị họ",
+    "regionalAliases": []
+  },
+  "4-4-true-false-false": {
+    "name": "Chị họ",
+    "regionalAliases": []
+  },
+  "4-4-false-true-true": {
+    "name": "Em trai họ",
+    "regionalAliases": []
+  },
+  "4-4-false-true-false": {
+    "name": "Em trai họ",
+    "regionalAliases": []
+  },
+  "4-4-false-false-true": {
+    "name": "Em gái họ",
+    "regionalAliases": []
+  },
+  "4-4-false-false-false": {
+    "name": "Em gái họ",
+    "regionalAliases": []
+  }
+}
