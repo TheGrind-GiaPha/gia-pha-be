@@ -20,6 +20,7 @@ public static class RepositoryServiceCollectionExtensions
         services.AddScoped<IImportBatchRepository, ImportBatchRepository>();
         services.AddScoped<IImportRowRepository, ImportRowRepository>();
         services.AddScoped<IExportJobRepository, ExportJobRepository>();
+        services.AddScoped<IF3Repository, F3Repository>();
         services.AddScoped<IRepositoryManager, RepositoryManager>();
         return services;
     }

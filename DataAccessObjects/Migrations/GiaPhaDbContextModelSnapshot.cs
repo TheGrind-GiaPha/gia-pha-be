@@ -555,6 +555,104 @@ namespace GiaPha.DataAccessObjects.Migrations
                     b.ToTable("Persons", (string)null);
                 });
 
+            modelBuilder.Entity("GiaPha.BusinessObjects.Entities.PersonPhoto", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Caption")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<Guid>("ClanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("FileSizeBytes")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsOrphan")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<bool>("IsVerified")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("ObjectKey")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<Guid>("PersonId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("SetAsPortrait")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClanId");
+
+                    b.HasIndex("PersonId");
+
+                    b.ToTable("PersonPhotos", (string)null);
+                });
+
+            modelBuilder.Entity("GiaPha.BusinessObjects.Entities.PersonProfileExtension", b =>
+                {
+                    b.Property<Guid>("PersonId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Biography")
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<string>("BurialMapUrl")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("BurialPlace")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<Guid>("ClanId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("PersonId");
+
+                    b.HasIndex("ClanId");
+
+                    b.ToTable("PersonProfileExtensions", (string)null);
+                });
+
             modelBuilder.Entity("GiaPha.BusinessObjects.Entities.Union", b =>
                 {
                     b.Property<Guid>("Id")
@@ -797,6 +895,24 @@ namespace GiaPha.DataAccessObjects.Migrations
                     b.Navigation("BirthDate");
 
                     b.Navigation("DeathDate");
+                });
+
+            modelBuilder.Entity("GiaPha.BusinessObjects.Entities.PersonPhoto", b =>
+                {
+                    b.HasOne("GiaPha.BusinessObjects.Entities.Person", null)
+                        .WithMany()
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GiaPha.BusinessObjects.Entities.PersonProfileExtension", b =>
+                {
+                    b.HasOne("GiaPha.BusinessObjects.Entities.Person", null)
+                        .WithOne()
+                        .HasForeignKey("GiaPha.BusinessObjects.Entities.PersonProfileExtension", "PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("GiaPha.BusinessObjects.Entities.Union", b =>

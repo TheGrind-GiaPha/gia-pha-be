@@ -10,6 +10,8 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddBusinessServices(this IServiceCollection services)
     {
+        services.AddScoped<PrivacyFilterService>();
+        services.AddScoped<PersonProfileService>();
         services.AddSingleton<ILunarConverter, LunarConverter>();
         services.AddSingleton<IAnniversaryCalculator, AnniversaryCalculator>();
 
