@@ -31,12 +31,3 @@ public sealed record ChangeRequestDto(
     DateTime CreatedAt,
     DateTime DueAt,
     string? RejectReason);
-
-public sealed record AuditLogDto(
-    Guid Id,
-    string EntityType,
-    AuditAction Action,
-    Guid ActorId,
-    Guid? ChangeRequestId,
-    string? AfterJson,
-    DateTime OccurredAt);

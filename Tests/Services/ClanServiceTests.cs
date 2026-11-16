@@ -82,4 +82,112 @@ public sealed class ClanServiceTests
         Assert.False(deleted);
         repositoryManager.Verify(x => x.SaveAsync(It.IsAny<CancellationToken>()), Times.Never);
     }
+
+    [Fact]
+    public async Task PublishAsync_WhenDraft_SetsPublishedAndSaves()
+    {
+        var clan = new Clan
+        {
+            Id = Guid.NewGuid(),
+            Name = "Họ Nguyễn",
+            Status = ClanStatus.Draft
+        };
+
+        var clanRepository = new Mock<IClanRepository>();
+        clanRepository
+            .Setup(x => x.GetByIdAsync(clan.Id, true, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(clan);
+
+        var repositoryManager = new Mock<IRepositoryManager>();
+        repositoryManager.SetupGet(x => x.Clan).Returns(clanRepository.Object);
+        repositoryManager
+            .Setup(x => x.SaveAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(1);
+
+        var service = new ClanService(repositoryManager.Object, Mock.Of<ILoggerManager>());
+
+        var result = await service.PublishAsync(clan.Id);
+
+        Assert.NotNull(result);
+        Assert.Equal(ClanStatus.Published, result!.Status);
+        Assert.NotNull(result.PublishedAt);
+        Assert.Equal(ClanStatus.Published, clan.Status);
+        repositoryManager.Verify(x => x.SaveAsync(It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task PublishAsync_WhenAlreadyPublished_ThrowsConflictException()
+    {
+        var clan = new Clan
+        {
+            Id = Guid.NewGuid(),
+            Name = "Họ Nguyễn",
+            Status = ClanStatus.Published
+        };
+
+        var clanRepository = new Mock<IClanRepository>();
+        clanRepository
+            .Setup(x => x.GetByIdAsync(clan.Id, true, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(clan);
+
+        var repositoryManager = new Mock<IRepositoryManager>();
+        repositoryManager.SetupGet(x => x.Clan).Returns(clanRepository.Object);
+
+        var service = new ClanService(repositoryManager.Object, Mock.Of<ILoggerManager>());
+
+        await Assert.ThrowsAsync<ConflictException>(() => service.PublishAsync(clan.Id));
+        repositoryManager.Verify(x => x.SaveAsync(It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_WhenClanIsPublished_ThrowsRequiresChangeRequestException()
+    {
+        var clan = new Clan
+        {
+            Id = Guid.NewGuid(),
+            Name = "Họ Nguyễn",
+            Status = ClanStatus.Published
+        };
+
+        var clanRepository = new Mock<IClanRepository>();
+        clanRepository
+            .Setup(x => x.GetByIdAsync(clan.Id, true, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(clan);
+
+        var repositoryManager = new Mock<IRepositoryManager>();
+        repositoryManager.SetupGet(x => x.Clan).Returns(clanRepository.Object);
+
+        var service = new ClanService(repositoryManager.Object, Mock.Of<ILoggerManager>());
+
+        await Assert.ThrowsAsync<RequiresChangeRequestException>(() =>
+            service.UpdateAsync(clan.Id, new UpdateClanRequest { Name = "Họ Nguyễn Mới" }));
+
+        repositoryManager.Verify(x => x.SaveAsync(It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task DeleteAsync_WhenClanIsPublished_ThrowsRequiresChangeRequestException()
+    {
+        var clan = new Clan
+        {
+            Id = Guid.NewGuid(),
+            Name = "Họ Nguyễn",
+            Status = ClanStatus.Published
+        };
+
+        var clanRepository = new Mock<IClanRepository>();
+        clanRepository
+            .Setup(x => x.GetByIdAsync(clan.Id, true, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(clan);
+
+        var repositoryManager = new Mock<IRepositoryManager>();
+        repositoryManager.SetupGet(x => x.Clan).Returns(clanRepository.Object);
+
+        var service = new ClanService(repositoryManager.Object, Mock.Of<ILoggerManager>());
+
+        await Assert.ThrowsAsync<RequiresChangeRequestException>(() => service.DeleteAsync(clan.Id));
+
+        clanRepository.Verify(x => x.Delete(It.IsAny<Clan>()), Times.Never);
+        repositoryManager.Verify(x => x.SaveAsync(It.IsAny<CancellationToken>()), Times.Never);
+    }
 }

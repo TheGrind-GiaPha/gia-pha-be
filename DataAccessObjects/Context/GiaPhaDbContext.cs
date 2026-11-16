@@ -1,3 +1,4 @@
+using GiaPha.BusinessObjects.Auditing;
 using GiaPha.BusinessObjects.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -5,10 +6,19 @@ namespace GiaPha.DataAccessObjects.Context;
 
 public sealed class GiaPhaDbContext : DbContext
 {
-    public GiaPhaDbContext(DbContextOptions<GiaPhaDbContext> options)
+    public GiaPhaDbContext(
+        DbContextOptions<GiaPhaDbContext> options,
+        IAuditContext? auditContext = null)
         : base(options)
     {
+        AuditContext = auditContext;
     }
+
+    /// <summary>
+    /// Audit context của request hiện tại. Interceptor đọc từ đây thay vì
+    /// giữ một instance scoped trong DbContext options (dễ bị dùng lại giữa request).
+    /// </summary>
+    public IAuditContext? AuditContext { get; }
 
     public DbSet<Clan> Clans => Set<Clan>();
 

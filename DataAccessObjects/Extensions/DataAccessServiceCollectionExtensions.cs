@@ -1,3 +1,5 @@
+using GiaPha.BusinessObjects.Auditing;
+using GiaPha.DataAccessObjects.Auditing;
 using GiaPha.DataAccessObjects.Context;
 using GiaPha.DataAccessObjects.DAOs;
 using GiaPha.DataAccessObjects.Seed;
@@ -17,13 +19,18 @@ public static class DataAccessServiceCollectionExtensions
             ?? throw new InvalidOperationException(
                 "Không tìm thấy connection string 'DefaultConnection' trong appsettings.json.");
 
-        services.AddDbContext<GiaPhaDbContext>(options =>
+        services.AddScoped<IAuditContext, AuditContext>();
+        services.AddSingleton<AuditSaveChangesInterceptor>();
+
+        services.AddDbContext<GiaPhaDbContext>((serviceProvider, options) =>
             options.UseSqlServer(
                 connectionString,
-                sql => sql.MigrationsAssembly(typeof(GiaPhaDbContext).Assembly.FullName)));
+                sql => sql.MigrationsAssembly(typeof(GiaPhaDbContext).Assembly.FullName))
+            .AddInterceptors(serviceProvider.GetRequiredService<AuditSaveChangesInterceptor>()));
 
         services.AddScoped(typeof(IGenericDao<>), typeof(GenericDao<>));
         services.AddScoped<IClanDao, ClanDao>();
+        services.AddScoped<IAuditLogDao, AuditLogDao>();
         services.AddScoped<GenealogySeeder>();
 
         return services;

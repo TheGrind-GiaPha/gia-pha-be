@@ -11,45 +11,11 @@ namespace GiaPha.DataAccessObjects.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "ChangeRequests",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ClanId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    Payload = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ReviewedByUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ReviewNote = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    ReviewedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ChangeRequests", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ChangeRequests_Clans_ClanId",
-                        column: x => x.ClanId,
-                        principalTable: "Clans",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ChangeRequests_Users_CreatedByUserId",
-                        column: x => x.CreatedByUserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ChangeRequests_Users_ReviewedByUserId",
-                        column: x => x.ReviewedByUserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
+            // ChangeRequests KHÔNG được tạo ở đây.
+            // Bản backup "luồng 4" sinh migration này trên một model cũ, nên nó
+            // tạo trùng bảng ChangeRequests với schema lỗi thời (Payload,
+            // CreatedByUserId...). Bảng ChangeRequests chuẩn được tạo ở
+            // 20261116004036_AddChangeRequestsMagicLinksAndProfile.
             migrationBuilder.CreateTable(
                 name: "ExportJobs",
                 columns: table => new
@@ -144,26 +110,6 @@ namespace GiaPha.DataAccessObjects.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ChangeRequests_ClanId",
-                table: "ChangeRequests",
-                column: "ClanId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ChangeRequests_CreatedByUserId",
-                table: "ChangeRequests",
-                column: "CreatedByUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ChangeRequests_ReviewedByUserId",
-                table: "ChangeRequests",
-                column: "ReviewedByUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ChangeRequests_Status",
-                table: "ChangeRequests",
-                column: "Status");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ExportJobs_BranchId",
                 table: "ExportJobs",
                 column: "BranchId");
@@ -212,9 +158,6 @@ namespace GiaPha.DataAccessObjects.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "ChangeRequests");
-
             migrationBuilder.DropTable(
                 name: "ExportJobs");
 

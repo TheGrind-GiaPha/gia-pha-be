@@ -21,11 +21,11 @@ public interface IClanService
         UpdateClanRequest request,
         CancellationToken cancellationToken = default);
 
-    Task<bool> DeleteAsync(
+    Task<ClanDto?> PublishAsync(
         Guid id,
         CancellationToken cancellationToken = default);
 
-    Task<bool> PublishAsync(
+    Task<bool> DeleteAsync(
         Guid id,
         CancellationToken cancellationToken = default);
 

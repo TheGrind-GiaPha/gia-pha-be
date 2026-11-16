@@ -1,3 +1,4 @@
+using GiaPha.BusinessObjects.Auditing;
 using GiaPha.BusinessObjects.DTOs.Changes;
 using GiaPha.BusinessObjects.Entities;
 using GiaPha.BusinessObjects.Exceptions;
@@ -12,17 +13,20 @@ public sealed class ChangeRequestService : IChangeRequestService
     private readonly IRepositoryManager _repository;
     private readonly ILoggerManager _logger;
     private readonly IClanRoleService _roleService;
+    private readonly IAuditContext _auditContext;
     private readonly IReadOnlyDictionary<string, IChangeHandler> _handlers;
 
     public ChangeRequestService(
         IRepositoryManager repository,
         ILoggerManager logger,
         IClanRoleService roleService,
+        IAuditContext auditContext,
         IEnumerable<IChangeHandler> handlers)
     {
         _repository = repository;
         _logger = logger;
         _roleService = roleService;
+        _auditContext = auditContext;
         _handlers = handlers.ToDictionary(h => h.Type);
     }
 
@@ -99,24 +103,37 @@ public sealed class ChangeRequestService : IChangeRequestService
         }
 
         // Apply + AuditLog trong cùng một transaction.
-        await handler.ApplyAsync(changeRequest.PayloadJson, cancellationToken);
+        _auditContext.ActorId = approverId;
+        _auditContext.ChangeRequestId = changeRequest.Id;
 
-        _repository.AuditLog.Create(new AuditLog
+        try
         {
-            ClanId = clanId,
-            EntityType = changeRequest.Type,
-            ChangeRequestId = changeRequest.Id,
-            ActorId = approverId,
-            Action = AuditAction.Update,
-            AfterJson = changeRequest.PayloadJson,
-            OccurredAt = DateTime.UtcNow
-        });
+            await handler.ApplyAsync(changeRequest.PayloadJson, cancellationToken);
 
-        changeRequest.Status = ChangeRequestStatus.Approved;
-        changeRequest.ReviewerId = approverId;
-        changeRequest.UpdatedAt = DateTime.UtcNow;
+            _repository.AuditLog.Create(new AuditLog
+            {
+                ClanId = clanId,
+                EntityType = changeRequest.Type,
+                EntityId = Guid.Empty,
+                ChangeRequestId = changeRequest.Id,
+                ActorId = approverId,
+                Action = AuditAction.Update,
+                BatchId = _auditContext.BatchId,
+                After = changeRequest.PayloadJson,
+                OccurredAt = DateTime.UtcNow
+            });
 
-        await _repository.SaveAsync(cancellationToken);
+            changeRequest.Status = ChangeRequestStatus.Approved;
+            changeRequest.ReviewerId = approverId;
+            changeRequest.UpdatedAt = DateTime.UtcNow;
+
+            await _repository.SaveAsync(cancellationToken);
+        }
+        finally
+        {
+            _auditContext.ActorId = null;
+            _auditContext.ChangeRequestId = null;
+        }
 
         _logger.LogInfo($"Đã duyệt đề xuất {id} bởi {approverId}.");
         return Map(changeRequest);

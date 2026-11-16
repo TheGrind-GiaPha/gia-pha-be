@@ -16,11 +16,12 @@ public static class ServiceCollectionExtensions
         // Service nghiệp vụ là scoped vì phụ thuộc repository/DbContext scoped.
         services.AddScoped<IClanService, ClanService>();
         services.AddScoped<IPersonService, PersonService>();
+        services.AddScoped<IAuditLogService, AuditLogService>();
+        services.AddScoped<IAuditRestoreService, AuditRestoreService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IPublicClanService, PublicClanService>();
         services.AddScoped<IClanRoleService, ClanRoleService>();
         services.AddScoped<IChangeRequestService, ChangeRequestService>();
-        services.AddScoped<IAuditService, AuditService>();
 
         // Flow 4: Import & Export Services
         services.AddScoped<IExcelImportService, ExcelImportService>();
