@@ -24,6 +24,7 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
     {
         var (statusCode, code, message) = exception switch
         {
+            DomainValidationException ex => (StatusCodes.Status400BadRequest, ex.Code, ex.Message),
             RequiresChangeRequestException ex => (
                 StatusCodes.Status409Conflict,
                 ex.Code,
@@ -70,9 +71,9 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
         httpContext.Response.StatusCode = statusCode;
         httpContext.Response.ContentType = "application/json";
 
-        await httpContext.Response.WriteAsJsonAsync(
-            new { code, message },
-            cancellationToken);
+        await Results.Problem(title: code, detail: message, statusCode: statusCode,
+            instance: httpContext.Request.Path,
+            extensions: new Dictionary<string, object?> { ["code"] = code, ["message"] = message }).ExecuteAsync(httpContext);
 
         return true;
     }

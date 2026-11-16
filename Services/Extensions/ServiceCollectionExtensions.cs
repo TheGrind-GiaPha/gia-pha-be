@@ -10,6 +10,9 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddBusinessServices(this IServiceCollection services)
     {
+        services.AddSingleton<ILunarConverter, LunarConverter>();
+        services.AddSingleton<IAnniversaryCalculator, AnniversaryCalculator>();
+
         // Singleton pattern: logger dùng chung toàn ứng dụng.
         services.AddSingleton<ILoggerManager, LoggerManager>();
 
