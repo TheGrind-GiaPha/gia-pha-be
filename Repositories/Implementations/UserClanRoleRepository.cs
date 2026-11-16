@@ -36,4 +36,14 @@ public sealed class UserClanRoleRepository : RepositoryBase<UserClanRole>, IUser
                 x => x.UserId == userId && x.ClanId == clanId && x.Role == role,
                 trackChanges: false)
             .AnyAsync(cancellationToken);
+
+    public async Task<IReadOnlyList<ClanRole>> GetRolesAsync(
+        Guid userId,
+        Guid clanId,
+        CancellationToken cancellationToken = default)
+        => await FindByCondition(
+                x => x.UserId == userId && x.ClanId == clanId,
+                trackChanges: false)
+            .Select(x => x.Role)
+            .ToListAsync(cancellationToken);
 }

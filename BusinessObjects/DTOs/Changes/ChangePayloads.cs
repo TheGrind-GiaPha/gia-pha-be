@@ -26,3 +26,9 @@ public sealed record MergePersonsChangePayload(
     Guid ClanId,
     Guid KeepId,
     Guid RemoveId);
+
+public sealed record AddUnionChangePayload(
+    Guid ClanId,
+    Guid HusbandId,
+    Guid WifeId,
+    int Rank);

@@ -155,6 +155,14 @@ public sealed class ClanService : IClanService
         return true;
     }
 
+    public async Task<bool> IsPublishedAsync(
+        Guid id,
+        CancellationToken cancellationToken = default)
+    {
+        var clan = await _repository.Clan.GetByIdAsync(id, trackChanges: false, cancellationToken);
+        return clan?.Status == ClanStatus.Published;
+    }
+
     private static string NormalizeName(string name)
     {
         var normalized = name.Trim();

@@ -75,6 +75,23 @@ builder.Services
             ValidateLifetime = true,
             ClockSkew = TimeSpan.Zero
         };
+
+        // Trả ProblemDetails thay vì 401 trống để client hiển thị đúng lý do.
+        options.Events = new JwtBearerEvents
+        {
+            OnChallenge = async context =>
+            {
+                context.HandleResponse();
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                context.Response.ContentType = "application/problem+json";
+                await context.Response.WriteAsJsonAsync(new
+                {
+                    title = "Chưa đăng nhập",
+                    detail = "Phiên đăng nhập không hợp lệ hoặc đã hết hạn.",
+                    status = StatusCodes.Status401Unauthorized
+                });
+            }
+        };
     });
 
 var allowedOrigins = builder.Configuration

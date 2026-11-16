@@ -19,4 +19,9 @@ public interface IUserClanRoleRepository : IRepositoryBase<UserClanRole>
         Guid clanId,
         ClanRole role,
         CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<ClanRole>> GetRolesAsync(
+        Guid userId,
+        Guid clanId,
+        CancellationToken cancellationToken = default);
 }

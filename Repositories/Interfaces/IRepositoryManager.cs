@@ -18,6 +18,10 @@ public interface IRepositoryManager
 
     IUnionRepository Union { get; }
 
+    IMagicLinkTokenRepository MagicLinkToken { get; }
+
+    IChangeRequestRepository ChangeRequest { get; }
+
     IAuditLogRepository AuditLog { get; }
 
     Task<int> SaveAsync(CancellationToken cancellationToken = default);

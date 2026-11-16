@@ -20,6 +20,135 @@ public sealed class PersonService : IPersonService
         _logger = logger;
     }
 
+    public async Task<PersonDto?> GetByIdAsync(
+        Guid clanId,
+        Guid personId,
+        CancellationToken cancellationToken = default)
+    {
+        var person = await _repository.Person.GetByIdAsync(personId, trackChanges: false, cancellationToken);
+        return person is null || person.ClanId != clanId ? null : Map(person);
+    }
+
+    public async Task<PersonProfileDto?> GetProfileAsync(
+        Guid clanId,
+        Guid personId,
+        CancellationToken cancellationToken = default)
+    {
+        var person = await _repository.Person.GetByIdAsync(personId, trackChanges: false, cancellationToken);
+        if (person is null || person.ClanId != clanId)
+        {
+            return null;
+        }
+
+        // Vợ/chồng.
+        var unions = await _repository.Union.GetByPersonIdAsync(personId, cancellationToken);
+        var spouseIds = unions.Select(u => u.HusbandId == personId ? u.WifeId : u.HusbandId).Distinct().ToList();
+        var spouses = await _repository.Person.GetByIdsAsync(spouseIds, trackChanges: false, cancellationToken);
+        var spouseById = spouses.ToDictionary(p => p.Id);
+        var spouseDtos = unions
+            .Select(u =>
+            {
+                var otherId = u.HusbandId == personId ? u.WifeId : u.HusbandId;
+                var other = spouseById.GetValueOrDefault(otherId);
+                return new SpouseDto(u.Id, otherId, other?.FullName ?? "(không rõ)", u.Rank);
+            })
+            .OrderBy(s => s.Rank)
+            .ToList();
+
+        // Cha/mẹ.
+        var parentLinks = await _repository.ParentChild.GetAllByChildIdAsync(personId, cancellationToken);
+        var parentIds = parentLinks.Select(l => l.ParentId).ToList();
+        var parents = await _repository.Person.GetByIdsAsync(parentIds, trackChanges: false, cancellationToken);
+        var parentById = parents.ToDictionary(p => p.Id);
+        var parentDtos = parentIds.Where(parentById.ContainsKey).Select(id => Map(parentById[id])).ToList();
+
+        // Con (ruột).
+        var childLinks = await _repository.ParentChild.GetByParentIdsAsync(
+            new[] { personId }, RelationType.Biological, cancellationToken);
+        var childIds = childLinks.OrderBy(l => l.SiblingOrder).Select(l => l.ChildId).ToList();
+        var children = await _repository.Person.GetByIdsAsync(childIds, trackChanges: false, cancellationToken);
+        var childById = children.ToDictionary(p => p.Id);
+        var childDtos = childIds.Where(childById.ContainsKey).Select(id => Map(childById[id])).ToList();
+
+        return MapProfile(person, spouseDtos, parentDtos, childDtos);
+    }
+
+    public async Task<PersonDto> CreateRootAsync(
+        Guid clanId,
+        PersonProfileRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var existing = await _repository.Person.GetByClanAsync(clanId, trackChanges: false, cancellationToken);
+        if (existing.Count > 0)
+        {
+            throw new ConflictException("Dòng họ đã có người. Thêm người mới qua nút 'Thêm con' trên cây.");
+        }
+
+        var person = new Person
+        {
+            ClanId = clanId,
+            FullName = NormalizeName(request.FullName),
+            Gender = request.Gender,
+            HuyName = TrimToNull(request.HuyName),
+            TuName = TrimToNull(request.TuName),
+            ThuyName = TrimToNull(request.ThuyName),
+            OtherNames = TrimToNull(request.OtherNames),
+            BirthDate = Map(request.BirthDate),
+            DeathDate = Map(request.DeathDate),
+            IsLiving = request.DeathDate is null,
+            Generation = 1,
+            Status = PersonStatus.Active,
+            PrivacyLevel = request.PrivacyLevel,
+            Biography = TrimToNull(request.Biography),
+            BurialPlace = TrimToNull(request.BurialPlace),
+            BurialMapUrl = TrimToNull(request.BurialMapUrl),
+            Contact = TrimToNull(request.Contact),
+            Version = 1
+        };
+        person.Path = $"/{person.Id}/";
+
+        _repository.Person.Create(person);
+        await _repository.SaveAsync(cancellationToken);
+
+        _logger.LogInfo($"Đã thêm thủy tổ '{person.FullName}' cho dòng họ {clanId}.");
+        return Map(person);
+    }
+
+    public async Task<PersonProfileDto?> UpdateAsync(
+        Guid clanId,
+        Guid personId,
+        PersonProfileRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var person = await _repository.Person.GetByIdAsync(personId, trackChanges: true, cancellationToken);
+        if (person is null || person.ClanId != clanId)
+        {
+            return null;
+        }
+
+        person.FullName = NormalizeName(request.FullName);
+        person.Gender = request.Gender;
+        person.HuyName = TrimToNull(request.HuyName);
+        person.TuName = TrimToNull(request.TuName);
+        person.ThuyName = TrimToNull(request.ThuyName);
+        person.OtherNames = TrimToNull(request.OtherNames);
+        person.BirthDate = Map(request.BirthDate);
+        person.DeathDate = Map(request.DeathDate);
+        person.IsLiving = request.DeathDate is null;
+        person.PrivacyLevel = request.PrivacyLevel;
+        person.Biography = TrimToNull(request.Biography);
+        person.BurialPlace = TrimToNull(request.BurialPlace);
+        person.BurialMapUrl = TrimToNull(request.BurialMapUrl);
+        person.Contact = TrimToNull(request.Contact);
+        person.UpdatedAt = DateTime.UtcNow;
+
+        _repository.Person.Update(person);
+        await _repository.SaveAsync(cancellationToken);
+
+        _logger.LogInfo($"Đã cập nhật hồ sơ người {personId}.");
+        return await GetProfileAsync(clanId, personId, cancellationToken);
+    }
+
     public async Task<IReadOnlyList<PersonDto>> AddChildrenAsync(
         Guid clanId,
         Guid fatherId,
@@ -513,6 +642,39 @@ public sealed class PersonService : IPersonService
 
         return builder.ToString().Normalize(NormalizationForm.FormC).ToLowerInvariant();
     }
+
+    private static string? TrimToNull(string? value)
+        => string.IsNullOrWhiteSpace(value) ? null : value.Trim();
+
+    private static PersonProfileDto MapProfile(
+        Person person,
+        IReadOnlyList<SpouseDto> spouses,
+        IReadOnlyList<PersonDto> parents,
+        IReadOnlyList<PersonDto> children)
+        => new(
+            person.Id,
+            person.ClanId,
+            person.FullName,
+            person.HuyName,
+            person.TuName,
+            person.ThuyName,
+            person.OtherNames,
+            person.Gender,
+            Map(person.BirthDate),
+            Map(person.DeathDate),
+            person.IsLiving,
+            person.Generation,
+            person.BranchId,
+            person.PrivacyLevel,
+            person.PortraitUrl,
+            person.Biography,
+            person.BurialPlace,
+            person.BurialMapUrl,
+            person.Contact,
+            person.HasHiddenChildren,
+            spouses,
+            parents,
+            children);
 
     private static FlexibleDate? Map(FlexibleDateDto? dto)
         => dto is null

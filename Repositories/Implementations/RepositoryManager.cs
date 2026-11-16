@@ -15,6 +15,8 @@ public sealed class RepositoryManager : IRepositoryManager
         IPersonRepository personRepository,
         IParentChildRepository parentChildRepository,
         IUnionRepository unionRepository,
+        IMagicLinkTokenRepository magicLinkTokenRepository,
+        IChangeRequestRepository changeRequestRepository,
         IAuditLogRepository auditLogRepository)
     {
         _context = context;
@@ -24,6 +26,8 @@ public sealed class RepositoryManager : IRepositoryManager
         Person = personRepository;
         ParentChild = parentChildRepository;
         Union = unionRepository;
+        MagicLinkToken = magicLinkTokenRepository;
+        ChangeRequest = changeRequestRepository;
         AuditLog = auditLogRepository;
     }
 
@@ -38,6 +42,10 @@ public sealed class RepositoryManager : IRepositoryManager
     public IParentChildRepository ParentChild { get; }
 
     public IUnionRepository Union { get; }
+
+    public IMagicLinkTokenRepository MagicLinkToken { get; }
+
+    public IChangeRequestRepository ChangeRequest { get; }
 
     public IAuditLogRepository AuditLog { get; }
 

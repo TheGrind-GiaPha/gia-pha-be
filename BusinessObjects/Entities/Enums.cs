@@ -69,3 +69,13 @@ public enum ClanRole
     Approver = 2,
     Member = 3
 }
+
+/// <summary>Trạng thái của một đề xuất thay đổi (ChangeRequest).</summary>
+public enum ChangeRequestStatus
+{
+    Pending = 0,
+    Approved = 1,
+    Rejected = 2,
+    Escalated = 3,
+    Cancelled = 4
+}

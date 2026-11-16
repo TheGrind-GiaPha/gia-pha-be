@@ -33,6 +33,7 @@ public static class AuditDiffFormatter
         ["huyName"] = "Tên húy",
         ["tuName"] = "Tên tự",
         ["thuyName"] = "Tên thụy",
+        ["otherNames"] = "Tên khác",
         ["gender"] = "Giới tính",
         ["birthDate"] = "Ngày sinh",
         ["deathDate"] = "Ngày mất",
@@ -40,6 +41,10 @@ public static class AuditDiffFormatter
         ["generation"] = "Đời",
         ["privacyLevel"] = "Mức riêng tư",
         ["portraitUrl"] = "Ảnh chân dung",
+        ["biography"] = "Tiểu sử",
+        ["burialPlace"] = "Nơi an táng",
+        ["burialMapUrl"] = "Bản đồ mộ",
+        ["contact"] = "Liên hệ",
         ["mergedIntoId"] = "Gộp vào",
         ["branchId"] = "Chi",
         ["visibility"] = "Chế độ hiển thị",
@@ -61,7 +66,8 @@ public static class AuditDiffFormatter
         ["huyName"] = 1,
         ["tuName"] = 2,
         ["thuyName"] = 3,
-        ["gender"] = 4,
+        ["otherNames"] = 4,
+        ["gender"] = 5,
         ["birthDate"] = 5,
         ["deathDate"] = 6,
         ["isLiving"] = 7,
@@ -73,10 +79,14 @@ public static class AuditDiffFormatter
         ["publishedAt"] = 13,
         ["privacyLevel"] = 14,
         ["portraitUrl"] = 15,
-        ["mergedIntoId"] = 16,
-        ["branchId"] = 17,
-        ["visibility"] = 18,
-        ["hasHiddenChildren"] = 19
+        ["biography"] = 16,
+        ["burialPlace"] = 17,
+        ["burialMapUrl"] = 18,
+        ["contact"] = 19,
+        ["mergedIntoId"] = 20,
+        ["branchId"] = 21,
+        ["visibility"] = 22,
+        ["hasHiddenChildren"] = 23
     };
 
     public static AuditLogDto ToDto(AuditLog log)

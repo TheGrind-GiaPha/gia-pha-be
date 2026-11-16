@@ -32,6 +32,10 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
                 StatusCodes.Status401Unauthorized,
                 ApiErrorCodes.Unauthorized,
                 ex.Message),
+            ForbiddenException ex => (
+                StatusCodes.Status403Forbidden,
+                ApiErrorCodes.Forbidden,
+                ex.Message),
             ConflictException ex => (
                 StatusCodes.Status409Conflict,
                 ApiErrorCodes.Conflict,

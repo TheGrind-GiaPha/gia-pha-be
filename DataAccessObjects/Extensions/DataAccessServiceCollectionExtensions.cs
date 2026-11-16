@@ -20,7 +20,7 @@ public static class DataAccessServiceCollectionExtensions
                 "Không tìm thấy connection string 'DefaultConnection' trong appsettings.json.");
 
         services.AddScoped<IAuditContext, AuditContext>();
-        services.AddScoped<AuditSaveChangesInterceptor>();
+        services.AddSingleton<AuditSaveChangesInterceptor>();
 
         services.AddDbContext<GiaPhaDbContext>((serviceProvider, options) =>
             options.UseSqlServer(

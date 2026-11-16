@@ -28,4 +28,8 @@ public interface IClanService
     Task<bool> DeleteAsync(
         Guid id,
         CancellationToken cancellationToken = default);
+
+    Task<bool> IsPublishedAsync(
+        Guid id,
+        CancellationToken cancellationToken = default);
 }

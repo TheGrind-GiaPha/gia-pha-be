@@ -25,6 +25,21 @@ public sealed class PersonConfiguration : IEntityTypeConfiguration<Person>
         builder.Property(x => x.ThuyName)
             .HasMaxLength(200);
 
+        builder.Property(x => x.OtherNames)
+            .HasMaxLength(500);
+
+        builder.Property(x => x.Biography)
+            .HasMaxLength(4000);
+
+        builder.Property(x => x.BurialPlace)
+            .HasMaxLength(500);
+
+        builder.Property(x => x.BurialMapUrl)
+            .HasMaxLength(500);
+
+        builder.Property(x => x.Contact)
+            .HasMaxLength(500);
+
         builder.Property(x => x.Path)
             .IsRequired()
             .HasMaxLength(1000);

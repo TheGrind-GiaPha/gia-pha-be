@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using GiaPha.BusinessObjects.DTOs.Auth;
 using GiaPha.BusinessObjects.Entities;
@@ -67,6 +68,62 @@ public sealed class AuthService : IAuthService
         return new AuthResponse(GenerateToken(user), Map(user));
     }
 
+    public async Task<MagicLinkResponse> RequestMagicLinkAsync(
+        MagicLinkRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var email = NormalizeEmail(request.Email);
+        var user = await _repository.User.GetByEmailAsync(email, cancellationToken);
+
+        // Không tiết lộ email có tồn tại hay không.
+        if (user is null)
+        {
+            return new MagicLinkResponse(null, "Nếu email tồn tại, bạn sẽ nhận được liên kết đăng nhập.");
+        }
+
+        var token = Convert.ToHexString(RandomNumberGenerator.GetBytes(32)).ToLowerInvariant();
+        var tokenHash = HashToken(token);
+
+        _repository.MagicLinkToken.Create(new MagicLinkToken
+        {
+            UserId = user.Id,
+            TokenHash = tokenHash,
+            ExpiresAt = DateTime.UtcNow.AddHours(48)
+        });
+        await _repository.SaveAsync(cancellationToken);
+
+        _logger.LogInfo($"Đã tạo magic link cho {email}.");
+
+        // Dev trả link để demo; production gửi qua email/Zalo, không trả link.
+        return new MagicLinkResponse($"/m/{token}", "Đã tạo liên kết đăng nhập (hết hạn 48 giờ).");
+    }
+
+    public async Task<AuthResponse?> VerifyMagicLinkAsync(
+        MagicLinkVerifyRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var tokenHash = HashToken(request.Token);
+        var link = await _repository.MagicLinkToken.GetByTokenHashAsync(tokenHash, cancellationToken);
+
+        if (link is null || link.UsedAt is not null || link.ExpiresAt < DateTime.UtcNow)
+        {
+            return null;
+        }
+
+        var user = await _repository.User.GetByIdAsync(link.UserId, trackChanges: false, cancellationToken);
+        if (user is null)
+        {
+            return null;
+        }
+
+        link.UsedAt = DateTime.UtcNow;
+        _repository.MagicLinkToken.Update(link);
+        await _repository.SaveAsync(cancellationToken);
+
+        _logger.LogInfo($"Magic link đã được dùng cho {user.Email}.");
+        return new AuthResponse(GenerateToken(user), Map(user));
+    }
+
     public async Task<UserDto?> GetProfileAsync(
         Guid userId,
         CancellationToken cancellationToken = default)
@@ -74,6 +131,9 @@ public sealed class AuthService : IAuthService
         var user = await _repository.User.GetByIdAsync(userId, trackChanges: false, cancellationToken);
         return user is null ? null : Map(user);
     }
+
+    private static string HashToken(string token)
+        => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(token)));
 
     private string GenerateToken(User user)
     {

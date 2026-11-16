@@ -1,6 +1,7 @@
 using System.Text.Json;
 using GiaPha.BusinessObjects.Auditing;
 using GiaPha.BusinessObjects.Entities;
+using GiaPha.DataAccessObjects.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -16,12 +17,6 @@ public class AuditSaveChangesInterceptor : SaveChangesInterceptor
         nameof(BaseEntity.UpdatedAt)
     };
 
-    private readonly IAuditContext _auditContext;
-    public AuditSaveChangesInterceptor(IAuditContext auditContext)
-    {
-        _auditContext = auditContext;
-    }
-
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default)
     {
         AddAuditLogs(eventData.Context);
@@ -34,6 +29,8 @@ public class AuditSaveChangesInterceptor : SaveChangesInterceptor
         {
             return;
         }
+
+        var auditContext = (context as GiaPhaDbContext)?.AuditContext ?? new AuditContext();
         var entries = context.ChangeTracker.Entries()
             .Where(entry => entry.State is EntityState.Added or EntityState.Modified)
             .Where(entry => entry.Entity is IClanScopedEntity)
@@ -56,10 +53,12 @@ public class AuditSaveChangesInterceptor : SaveChangesInterceptor
                 EntityId = entry.Property("Id").CurrentValue is Guid id ? id : Guid.Empty,
                 Action = entry.State == EntityState.Added
                     ? AuditAction.Create
-                    : _auditContext.IsRestore
+                    : auditContext.IsRestore
                         ? AuditAction.Restore
                         : AuditAction.Update,
-                BatchId = _auditContext.BatchId,
+                ActorId = auditContext.ActorId,
+                ChangeRequestId = auditContext.ChangeRequestId,
+                BatchId = auditContext.BatchId,
                 Before = before,
                 After = after,
                 OccurredAt = DateTime.UtcNow

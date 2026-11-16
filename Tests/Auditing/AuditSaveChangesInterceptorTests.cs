@@ -15,10 +15,10 @@ public sealed class AuditSaveChangesInterceptorTests
 
         var options = new DbContextOptionsBuilder<GiaPhaDbContext>()
             .UseInMemoryDatabase($"audit-{Guid.NewGuid()}")
-            .AddInterceptors(new AuditSaveChangesInterceptor(auditContext))
+            .AddInterceptors(new AuditSaveChangesInterceptor())
             .Options;
 
-        return new GiaPhaDbContext(options);
+        return new GiaPhaDbContext(options, auditContext);
     }
 
     [Fact]
@@ -85,6 +85,28 @@ public sealed class AuditSaveChangesInterceptorTests
 
         Assert.Equal("Gia phả họ Nguyễn Hữu", before.RootElement.GetProperty("name").GetString());
         Assert.Equal("Gia phả họ Nguyễn Hữu 1", after.RootElement.GetProperty("name").GetString());
+    }
+
+    [Fact]
+    public async Task SavingAddedPerson_UsesCurrentRequestAuditContext()
+    {
+        await using var db = CreateContext(out var auditContext);
+        auditContext.ActorId = Guid.NewGuid();
+        auditContext.ChangeRequestId = Guid.NewGuid();
+
+        db.Persons.Add(new Person
+        {
+            ClanId = Guid.NewGuid(),
+            FullName = "Nguyễn Văn A",
+            Generation = 1,
+            Path = "/"
+        });
+
+        await db.SaveChangesAsync();
+
+        var log = db.AuditLogs.Single();
+        Assert.Equal(auditContext.ActorId, log.ActorId);
+        Assert.Equal(auditContext.ChangeRequestId, log.ChangeRequestId);
     }
 
     [Fact]

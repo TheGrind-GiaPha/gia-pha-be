@@ -84,15 +84,33 @@ public sealed class ClansController : ControllerBase
         return clan is null ? NotFound() : Ok(clan);
     }
 
-    /// <summary>Công bố dòng họ. Sau khi công bố, mọi ghi trực tiếp bị chặn.</summary>
+    /// <summary>Công bố dòng họ. Chỉ Người duyệt hoặc Quản trị họ.</summary>
     [HttpPost("{id:guid}/publish")]
     [ProducesResponseType(typeof(ClanDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<ActionResult<ClanDto>> Publish(
         Guid id,
         CancellationToken cancellationToken)
     {
+        var userId = GetUserId();
+        if (userId is null)
+        {
+            return Unauthorized();
+        }
+
+        var isApprover = await _clanRoleService.HasRoleAsync(
+            userId.Value, id, ClanRole.Approver, cancellationToken);
+        var isAdmin = await _clanRoleService.HasRoleAsync(
+            userId.Value, id, ClanRole.ClanAdmin, cancellationToken);
+
+        if (!isApprover && !isAdmin)
+        {
+            return Forbid();
+        }
+
         var clan = await _clanService.PublishAsync(id, cancellationToken);
         return clan is null ? NotFound() : Ok(clan);
     }
