@@ -33,6 +33,56 @@ public sealed class GenealogySeeder
             await _context.SaveChangesAsync(cancellationToken);
         }
 
+        // Seed các tài khoản mẫu nếu bảng Users còn trống
+        if (!await _context.Users.AnyAsync(cancellationToken))
+        {
+            var adminUser = new User
+            {
+                Email = "admin@giapha.vn",
+                DisplayName = "Quản trị viên Hệ thống",
+                PasswordHash = "XFTgKkrm2dRo2AAiFTtFyg==.E62KCjyMOwnIxlle8hKgHzjGs6rIbGnOQec9UE/7pFs="
+            };
+            var editorUser = new User
+            {
+                Email = "editor@giapha.vn",
+                DisplayName = "Ban biên tập Gia phả",
+                PasswordHash = "DUAwuqEoToidzGz+0VB76A==.dVgakCKkm906BJZV/gBIunNaULAeASeij6Nz7MzqhQk="
+            };
+            var memberUser = new User
+            {
+                Email = "thanhvien@giapha.vn",
+                DisplayName = "Nguyễn Văn Thành Viên",
+                PasswordHash = "k9Jvndxs4CfzsH0ue9/5MQ==.O++i4PiOJU+FKSkvW7AZwn+30wXU8yUEBD5cQ850pjg="
+            };
+
+            _context.Users.AddRange(adminUser, editorUser, memberUser);
+            await _context.SaveChangesAsync(cancellationToken);
+
+            var existingClans = await _context.Clans.ToListAsync(cancellationToken);
+            foreach (var c in existingClans)
+            {
+                _context.UserClanRoles.Add(new UserClanRole
+                {
+                    UserId = adminUser.Id,
+                    ClanId = c.Id,
+                    Role = ClanRole.ClanAdmin
+                });
+                _context.UserClanRoles.Add(new UserClanRole
+                {
+                    UserId = editorUser.Id,
+                    ClanId = c.Id,
+                    Role = ClanRole.BranchEditor
+                });
+                _context.UserClanRoles.Add(new UserClanRole
+                {
+                    UserId = memberUser.Id,
+                    ClanId = c.Id,
+                    Role = ClanRole.Member
+                });
+            }
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+
         if (await _context.Persons.AnyAsync(cancellationToken))
         {
             return 0;

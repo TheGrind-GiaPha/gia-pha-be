@@ -70,6 +70,48 @@ public enum ClanRole
     Member = 3
 }
 
+/// <summary>Nguồn gốc tệp nhập liệu.</summary>
+public enum ImportSource
+{
+    Excel = 0,
+    Word = 1
+}
+
+/// <summary>Trạng thái của một lô nhập liệu.</summary>
+public enum ImportBatchStatus
+{
+    Uploaded = 0,
+    Parsing = 1,
+    Parsed = 2,
+    Committed = 3,
+    Failed = 4
+}
+
+/// <summary>Trạng thái kiểm duyệt của một dòng trong lô nhập liệu.</summary>
+public enum ImportRowStatus
+{
+    New = 0,
+    PossibleDuplicate = 1,
+    Rejected = 2,
+    Accepted = 3
+}
+
+/// <summary>Loại tài liệu xuất.</summary>
+public enum ExportType
+{
+    Book = 0,
+    Chart = 1
+}
+
+/// <summary>Trạng thái tác vụ xuất file nền.</summary>
+public enum ExportJobStatus
+{
+    Queued = 0,
+    Processing = 1,
+    Completed = 2,
+    Failed = 3
+}
+
 /// <summary>Trạng thái của một đề xuất thay đổi (ChangeRequest).</summary>
 public enum ChangeRequestStatus
 {

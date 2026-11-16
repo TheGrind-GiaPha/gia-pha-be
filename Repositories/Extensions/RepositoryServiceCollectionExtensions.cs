@@ -17,6 +17,9 @@ public static class RepositoryServiceCollectionExtensions
         services.AddScoped<IMagicLinkTokenRepository, MagicLinkTokenRepository>();
         services.AddScoped<IChangeRequestRepository, ChangeRequestRepository>();
         services.AddScoped<IAuditLogRepository, AuditLogRepository>();
+        services.AddScoped<IImportBatchRepository, ImportBatchRepository>();
+        services.AddScoped<IImportRowRepository, ImportRowRepository>();
+        services.AddScoped<IExportJobRepository, ExportJobRepository>();
         services.AddScoped<IRepositoryManager, RepositoryManager>();
         return services;
     }

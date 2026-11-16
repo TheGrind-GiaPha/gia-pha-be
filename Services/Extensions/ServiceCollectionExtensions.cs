@@ -23,12 +23,21 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IClanRoleService, ClanRoleService>();
         services.AddScoped<IChangeRequestService, ChangeRequestService>();
 
-        // Handler thay đổi cho ChangeRequest.Apply (Luồng 1).
+        // Flow 4: Import & Export Services
+        services.AddScoped<IExcelImportService, ExcelImportService>();
+        services.AddScoped<IWordImportService, WordImportService>();
+        services.AddHttpClient<ILlmExtractionService, GeminiExtractionService>();
+        services.AddScoped<IDuplicateDetectionService, DuplicateDetectionService>();
+        services.AddScoped<IImportService, ImportService>();
+        services.AddScoped<IExportService, ExportService>();
+
+        // Handler thay đổi cho ChangeRequest.Apply (Luồng 1 & Luồng 4).
         services.AddScoped<IChangeHandler, AddPersonHandler>();
         services.AddScoped<IChangeHandler, MoveSubtreeHandler>();
         services.AddScoped<IChangeHandler, DeletePersonHandler>();
         services.AddScoped<IChangeHandler, MergePersonsHandler>();
         services.AddScoped<IChangeHandler, AddUnionHandler>();
+        services.AddScoped<IChangeHandler, ImportBatchChangeHandler>();
 
         return services;
     }

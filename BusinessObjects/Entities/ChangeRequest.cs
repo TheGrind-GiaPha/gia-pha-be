@@ -12,7 +12,7 @@ public sealed class ChangeRequest : BaseEntity
 
     public Guid RequesterId { get; set; }
 
-    /// <summary>Loại thay đổi, khớp với IChangeHandler.Type (AddPerson, MoveSubtree...).</summary>
+    /// <summary>Loại thay đổi, khớp với IChangeHandler.Type (AddPerson, MoveSubtree, ImportBatch...).</summary>
     public string Type { get; set; } = string.Empty;
 
     public string PayloadJson { get; set; } = string.Empty;
