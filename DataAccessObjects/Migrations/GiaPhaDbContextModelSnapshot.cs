@@ -238,43 +238,6 @@ namespace GiaPha.DataAccessObjects.Migrations
                         });
                 });
 
-            modelBuilder.Entity("GiaPha.BusinessObjects.Entities.MagicLinkToken", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("ChangeRequestId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ExpiresAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("TokenHash")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("UsedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TokenHash")
-                        .IsUnique();
-
-                    b.ToTable("MagicLinkTokens", (string)null);
-                });
-
             modelBuilder.Entity("GiaPha.BusinessObjects.Entities.ExportJob", b =>
                 {
                     b.Property<Guid>("Id")
@@ -421,6 +384,43 @@ namespace GiaPha.DataAccessObjects.Migrations
                     b.HasIndex("BatchId", "RowIndex");
 
                     b.ToTable("ImportRows", (string)null);
+                });
+
+            modelBuilder.Entity("GiaPha.BusinessObjects.Entities.MagicLinkToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ChangeRequestId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("UsedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TokenHash")
+                        .IsUnique();
+
+                    b.ToTable("MagicLinkTokens", (string)null);
                 });
 
             modelBuilder.Entity("GiaPha.BusinessObjects.Entities.ParentChild", b =>
@@ -668,26 +668,6 @@ namespace GiaPha.DataAccessObjects.Migrations
                     b.HasOne("GiaPha.BusinessObjects.Entities.Person", null)
                         .WithMany()
                         .HasForeignKey("FounderPersonId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("GiaPha.BusinessObjects.Entities.ChangeRequest", b =>
-                {
-                    b.HasOne("GiaPha.BusinessObjects.Entities.Clan", null)
-                        .WithMany()
-                        .HasForeignKey("ClanId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("GiaPha.BusinessObjects.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("GiaPha.BusinessObjects.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("ReviewedByUserId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

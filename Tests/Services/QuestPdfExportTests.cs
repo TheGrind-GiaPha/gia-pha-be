@@ -46,7 +46,7 @@ public sealed class QuestPdfExportTests
         var husbandToWives = new Dictionary<Guid, List<(Person Wife, int Rank)>>();
 
         var exportService = new ExportService(
-            Mock.Of<Repositories.Interfaces.IRepositoryManager>(),
+            Mock.Of<GiaPha.Repositories.Interfaces.IRepositoryManager>(),
             Mock.Of<ILoggerManager>(),
             Mock.Of<Hangfire.IBackgroundJobClient>());
 
@@ -117,7 +117,7 @@ public sealed class QuestPdfExportTests
         }
 
         var exportService = new ExportService(
-            Mock.Of<Repositories.Interfaces.IRepositoryManager>(),
+            Mock.Of<GiaPha.Repositories.Interfaces.IRepositoryManager>(),
             Mock.Of<ILoggerManager>(),
             Mock.Of<Hangfire.IBackgroundJobClient>());
 
